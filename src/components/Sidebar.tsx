@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import Logo from '../images/logo/logo.svg';
 import SidebarLinkGroup from './SidebarLinkGroup';
@@ -17,7 +17,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
   const storedSidebarExpanded = localStorage.getItem('sidebar-expanded');
   const [sidebarExpanded, setSidebarExpanded] = useState(
-    storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true'
+    storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true',
   );
 
   // close on click outside
@@ -110,7 +110,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               >
                 {(handleClick, open) => {
                   return (
-                    <React.Fragment>
+                    <>
                       <NavLink
                         to="#"
                         className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
@@ -190,7 +190,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         </ul>
                       </div>
                       {/* <!-- Dropdown Menu End --> */}
-                    </React.Fragment>
+                    </>
                   );
                 }}
               </SidebarLinkGroup>
@@ -261,7 +261,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               >
                 {(handleClick, open) => {
                   return (
-                    <React.Fragment>
+                    <>
                       <NavLink
                         to="#"
                         className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
@@ -356,7 +356,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         </ul>
                       </div>
                       {/* <!-- Dropdown Menu End --> */}
-                    </React.Fragment>
+                    </>
                   );
                 }}
               </SidebarLinkGroup>
@@ -500,7 +500,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               >
                 {(handleClick, open) => {
                   return (
-                    <React.Fragment>
+                    <>
                       <NavLink
                         to="#"
                         className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
@@ -598,7 +598,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         </ul>
                       </div>
                       {/* <!-- Dropdown Menu End --> */}
-                    </React.Fragment>
+                    </>
                   );
                 }}
               </SidebarLinkGroup>
@@ -612,7 +612,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               >
                 {(handleClick, open) => {
                   return (
-                    <React.Fragment>
+                    <>
                       <NavLink
                         to="#"
                         className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
@@ -706,7 +706,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         </ul>
                       </div>
                       {/* <!-- Dropdown Menu End --> */}
-                    </React.Fragment>
+                    </>
                   );
                 }}
               </SidebarLinkGroup>

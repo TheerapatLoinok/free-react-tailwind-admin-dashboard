@@ -50,7 +50,7 @@ const TableHistory = ({ tableName }: TableHistoryProps) => {
             </p>
           </div>
           <div className="flex items-center justify-center p-2.5 xl:p-5">
-            <p className="text-meta-3">{moment().format('MMM Do YY')}</p>
+            <p className="text-black">{moment().format('MMM Do YY')}</p>
           </div>
         </div>
         <div className="grid grid-cols-3 border-b border-stroke dark:border-strokedark sm:grid-cols-3">
@@ -69,7 +69,7 @@ const TableHistory = ({ tableName }: TableHistoryProps) => {
             </p>
           </div>
           <div className="flex items-center justify-center p-2.5 xl:p-5">
-            <p className="text-meta-3">{moment().format('MMM Do YY')}</p>
+            <p className="text-black">{moment().format('MMM Do YY')}</p>
           </div>
         </div>
         <div className="grid grid-cols-3 border-b border-stroke dark:border-strokedark sm:grid-cols-3">
@@ -88,7 +88,7 @@ const TableHistory = ({ tableName }: TableHistoryProps) => {
             </p>
           </div>
           <div className="flex items-center justify-center p-2.5 xl:p-5">
-            <p className="text-meta-3">{moment().format('MMM Do YY')}</p>
+            <p className="text-black">{moment().format('MMM Do YY')}</p>
           </div>
         </div>
       </div>

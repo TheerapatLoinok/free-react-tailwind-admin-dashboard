@@ -1,6 +1,7 @@
 interface StepControllerProps {
   currentStep: number;
   maxSteps: number;
+  maxStepsText: string;
   onNextStep: (step: number) => void;
   onBackStep: (step: number) => void;
 }
@@ -10,6 +11,7 @@ const StepController = ({
   onBackStep,
   onNextStep,
   maxSteps,
+  maxStepsText,
 }: StepControllerProps) => {
   const handleInCreaseStep = () => {
     if (currentStep < maxSteps) {
@@ -35,7 +37,7 @@ const StepController = ({
         disabled={currentStep === maxSteps}
         className="py-2 px-4 bg-primary text-white rounded-lg self-end"
       >
-        Next
+        {currentStep === maxSteps ? `${maxStepsText}` : 'Next'}
       </button>
     </div>
   );

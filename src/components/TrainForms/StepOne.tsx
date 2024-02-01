@@ -5,6 +5,7 @@ const StepOne = () => {
         <label htmlFor="fileInput" className="text-sm">
           Please input file
         </label>
+
         <input id="fileInput" type={'file'} />
       </div>
       <div className="flex flex-col gap-2">

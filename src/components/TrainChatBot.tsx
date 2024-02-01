@@ -29,6 +29,7 @@ const TrainChatBot = () => {
       />
       <section>{handleDisplayForms(currentStep)}</section>
       <StepController
+        maxStepsText="Save to server"
         maxSteps={maxStep}
         onBackStep={setCurrentStep}
         onNextStep={setCurrentStep}

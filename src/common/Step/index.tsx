@@ -13,11 +13,13 @@ const Step = ({ currentStep, numberOfSteps, titleStep }: StepProps) => {
         <React.Fragment key={index}>
           <div className="w-10 h-10 rounded-full shrink-0 bg-black flex items-center justify-center relative">
             <p
-              className={`${currentStep === index + 1 ? 'text-white' : 'text-bodydark'}`}
+              className={`${currentStep === index + 1 ? 'text-white' : 'text-bodydark2'}`}
             >
               {index + 1}
             </p>
-            <p className="absolute -bottom-5 text-xs">
+            <p
+              className={`absolute -bottom-5 text-xs truncate ${currentStep == index + 1 ? 'text-black' : 'text-bodydark'}`}
+            >
               {titleStep[index] ?? `Step${index + 1}`}
             </p>
           </div>

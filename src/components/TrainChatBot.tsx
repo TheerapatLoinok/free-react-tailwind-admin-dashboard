@@ -21,13 +21,15 @@ const TrainChatBot = () => {
     }
   };
   return (
-    <section className="rounded-sm border flex flex-col gap-10 border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-      <Step
-        currentStep={currentStep}
-        numberOfSteps={maxStep}
-        titleStep={['Step1', 'Step2', 'Step3']}
-      />
-      <section>{handleDisplayForms(currentStep)}</section>
+    <div className="rounded-sm border  flex flex-col gap-14 border-stroke bg-white px-5 pt-6  shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+      <div className="px-7">
+        <Step
+          currentStep={currentStep}
+          numberOfSteps={maxStep}
+          titleStep={['Fill in information', 'Select model', 'Try to ask']}
+        />
+      </div>
+      <div>{handleDisplayForms(currentStep)}</div>
       <StepController
         maxStepsText="Save to server"
         maxSteps={maxStep}
@@ -35,7 +37,7 @@ const TrainChatBot = () => {
         onNextStep={setCurrentStep}
         currentStep={currentStep}
       />
-    </section>
+    </div>
   );
 };
 

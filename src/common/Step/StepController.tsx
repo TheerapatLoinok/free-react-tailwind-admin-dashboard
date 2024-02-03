@@ -24,18 +24,18 @@ const StepController = ({
     }
   };
   return (
-    <div className="flex justify-between w-full">
+    <div className="flex justify-between w-full py-3">
       <button
         onClick={handleDecreaseStep}
         disabled={currentStep <= 1}
-        className={`py-2 px-4 bg-bodydark text-white rounded-lg ${currentStep > 1 ? 'visible' : 'invisible'}`}
+        className={`py-2 px-4 bg-black hover:bg-opacity-90 text-white rounded-lg ${currentStep > 1 ? 'visible' : 'invisible'}`}
       >
         Back
       </button>
       <button
         onClick={handleInCreaseStep}
         disabled={currentStep === maxSteps}
-        className="py-2 px-4 bg-primary text-white rounded-lg self-end"
+        className="py-2 px-4 bg-primary hover:bg-opacity-90 text-white rounded-lg self-end"
       >
         {currentStep === maxSteps ? `${maxStepsText}` : 'Next'}
       </button>

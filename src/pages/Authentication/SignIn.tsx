@@ -1,17 +1,60 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import { SignInAPI } from '../../api/auth';
 
-type Inputs = {
+export type SignInInputs = {
   userName: string;
   password: string;
+  authentication?: string;
+};
+
+type UserType = {
+  statusCode: number;
+  message: string;
+  accessToken: string;
 };
 
 const SignIn = () => {
   const {
     register,
     handleSubmit,
+    setError,
+    clearErrors,
     formState: { errors },
-  } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  } = useForm<SignInInputs>();
+  const onSubmit: SubmitHandler<SignInInputs> = async (data) => {
+    try {
+      if (data) {
+        const user = (await SignInAPI({
+          userName: data.userName,
+          password: data.password,
+        })) as UserType;
+        if (user) {
+          localStorage.setItem('access_token', user.accessToken);
+          window.location.href = `/`;
+        }
+      }
+    } catch (error: any) {
+      console.log('error', error);
+      if (error?.response?.status === 400) {
+        setError('authentication', {
+          type: 'custom',
+          message: error?.response?.data?.message,
+        });
+      } else {
+        toast.error('Login failed', {
+          position: 'bottom-left',
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: 'colored',
+        });
+      }
+    }
+  };
 
   return (
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -168,6 +211,7 @@ const SignIn = () => {
                     id="username"
                     type="text"
                     placeholder="Enter your username"
+                    onInput={() => clearErrors('authentication')}
                     className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     {...register('userName', {
                       required: 'Please input your username',
@@ -211,6 +255,7 @@ const SignIn = () => {
                     id="password"
                     type="password"
                     placeholder="Enter your password"
+                    onInput={() => clearErrors('authentication')}
                     className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     {...register('password', {
                       required: 'Please input your password',
@@ -242,6 +287,11 @@ const SignIn = () => {
                 {errors.password && (
                   <span className="text-xs text-meta-1">
                     {errors.password.message}
+                  </span>
+                )}
+                {errors.authentication && (
+                  <span className="text-xs text-meta-1 py-4 flex justify-center">
+                    {errors.authentication.message}
                   </span>
                 )}
               </div>

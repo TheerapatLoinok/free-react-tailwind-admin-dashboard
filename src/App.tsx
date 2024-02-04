@@ -6,6 +6,7 @@ import SignIn from './pages/Authentication/SignIn';
 import Loader from './common/Loader';
 import routes from './routes';
 import { ToastContainer } from 'react-toastify';
+import PageNotFound from './components/Errors/PageNotFound';
 
 const DefaultLayout = lazy(() => import('./layout/DefaultLayout'));
 
@@ -25,6 +26,7 @@ function App() {
       {accessToken === null ? (
         <Routes>
           <Route index element={<SignIn />} />
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
       ) : (
         <Routes>
@@ -45,6 +47,7 @@ function App() {
               );
             })}
           </Route>
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
       )}
     </>

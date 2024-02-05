@@ -30,3 +30,13 @@ export const convertFiletoVector = (payload: CoverttoVectorType) => {
     withFromData: true,
   });
 };
+
+export const setNumberofChunckAPI = (chunck: number) => {
+  const body = {
+    numberChunk: chunck,
+  };
+  return http.post('/set/number-chunk-test', body, {
+    withAuth: true,
+    withFromData: false,
+  });
+};

@@ -2,9 +2,50 @@ import { IoHelpCircleSharp } from 'react-icons/io5';
 import Tooltip from '../../common/ ToolTip';
 import { useState } from 'react';
 import Breadcrumb from '../Breadcrumb';
+import { setNumberofChunckAPI } from '../../api/chatbot';
+import { toast } from 'react-toastify';
+
+type SetChunckType = {
+  message: string;
+  statusCode: number;
+};
 
 const NumberofChuncks = () => {
   const [chuncks, setChuncks] = useState('');
+  const handleSetChuncks = async () => {
+    try {
+      if (chuncks.trim() !== '') {
+        const data = (await setNumberofChunckAPI(
+          Number(chuncks),
+        )) as SetChunckType;
+        if (data) {
+          toast.success(data.message, {
+            position: 'bottom-left',
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: 'colored',
+          });
+        }
+      }
+      return;
+    } catch (error) {
+      console.log(error);
+      toast.error('Set number of chunck failed', {
+        position: 'bottom-left',
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: 'colored',
+      });
+    }
+  };
   return (
     <>
       <Breadcrumb
@@ -47,6 +88,7 @@ const NumberofChuncks = () => {
           </div>
           <button
             type="button"
+            onClick={() => handleSetChuncks()}
             disabled={chuncks.trim() === ''}
             className="py-2 bg-primary disabled:bg-body disabled:bg-opacity-80 hover:bg-opacity-90 rounded-lg text-white text-sm"
           >

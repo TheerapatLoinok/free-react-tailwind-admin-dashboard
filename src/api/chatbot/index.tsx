@@ -7,6 +7,12 @@ export type ParamsType = {
   startDate?: string;
   endDate?: string;
 };
+
+export type CoverttoVectorType = {
+  file: File;
+  chunk: string;
+  overlap: string;
+};
 export const chatbotHistoryAPI = (params: ParamsType) => {
   const param = {
     page: params.page ?? 1,
@@ -18,11 +24,8 @@ export const chatbotHistoryAPI = (params: ParamsType) => {
   return http.get(`/history-chat`, param, true);
 };
 
-export const uploadFileTextAPI = (files: File) => {
-  const body = {
-    file: files,
-  };
-  return http.post('/file/upload-data', body, {
+export const convertFiletoVector = (payload: CoverttoVectorType) => {
+  return http.post('/learning/upload-data-learning', payload, {
     withAuth: true,
     withFromData: true,
   });

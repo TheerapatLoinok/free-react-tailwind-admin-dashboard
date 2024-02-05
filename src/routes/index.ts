@@ -1,66 +1,43 @@
 import { lazy } from 'react';
 
-const Calendar = lazy(() => import('../pages/Calendar'));
-const LiveChat = lazy(() => import('../pages/LiveChat'));
-const Chart = lazy(() => import('../pages/Chart'));
-const FormElements = lazy(() => import('../pages/Form/FormElements'));
-const FormLayout = lazy(() => import('../pages/Form/FormLayout'));
 const Profile = lazy(() => import('../pages/Profile'));
-const Settings = lazy(() => import('../pages/Settings'));
-const Tables = lazy(() => import('../pages/Tables'));
-const Alerts = lazy(() => import('../pages/UiElements/Alerts'));
-const Buttons = lazy(() => import('../pages/UiElements/Buttons'));
+const UploadFiles = lazy(() => import('../components/TrainForms/UploadFiles'))
+const  NumberofChuncks = lazy(() => import('../components/TrainForms/NumberofChunck'))
+const KeypromptandModel = lazy(() => import('../components/TrainForms/KeyPromptForm'))
+const Chuncks = lazy(() => import('../pages/Chuncks'))
+const ChatAI = lazy(() => import('../pages/ChatAI'))
 
 const coreRoutes = [
-  {
-    path: '/calendar',
-    title: 'Calender',
-    component: Calendar,
-  },
+ 
   {
     path: '/profile',
     title: 'Profile',
     component: Profile,
   },
   {
-    path: '/forms/form-elements',
-    title: 'Forms Elements',
-    component: FormElements,
+    path: '/chat-ai',
+    title: 'Chat AI',
+    component: ChatAI,
   },
   {
-    path: '/forms/form-layout',
-    title: 'Form Layouts',
-    component: FormLayout,
+    path: '/chuncks',
+    title: 'Test Chuncks',
+    component: Chuncks,
   },
   {
-    path: '/tables',
-    title: 'Tables',
-    component: Tables,
+    path: '/settings/uploadfiles',
+    title: 'Upload files',
+    component: UploadFiles,
   },
   {
-    path: '/settings',
-    title: 'Settings',
-    component: Settings,
+    path: '/settings/chuncks',
+    title: 'Chuncks',
+    component: NumberofChuncks,
   },
   {
-    path: '/chart',
-    title: 'Chart',
-    component: Chart,
-  },
-  {
-    path: '/ui/alerts',
-    title: 'Alerts',
-    component: Alerts,
-  },
-  {
-    path: '/ui/buttons',
-    title: 'Buttons',
-    component: Buttons,
-  },
-  {
-    path: '/live-chat',
-    title: 'Live Chat',
-    component: LiveChat,
+    path: '/settings/keyprompt-and-model',
+    title: 'Keyprompt and Model',
+    component: KeypromptandModel,
   }
  
 ];

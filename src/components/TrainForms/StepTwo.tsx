@@ -1,23 +1,13 @@
 import { IoHelpCircleSharp } from 'react-icons/io5';
-import { MdModeEdit } from 'react-icons/md';
 import Tooltip from '../../common/ ToolTip';
 
-const StepTwo = () => {
+const StepTwo = ({ register, errors }: { register: any; errors: any }) => {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between items-center">
         <h3 className="text-xl font-semibold text-black">
           Set key prompt and select model
         </h3>
-        <div className="flex gap-4">
-          <button className="text-sm font-medium px-2 py-1 text-black border-[1px] border-black rounded-lg">
-            Cancel
-          </button>
-          <button className="text-sm font-medium px-2 py-1 text-danger border-[1px] border-b-danger rounded-lg flex gap-2 items-center">
-            <MdModeEdit />
-            Edit
-          </button>
-        </div>
       </div>
       <div className="flex flex-col gap-2">
         <label
@@ -37,6 +27,7 @@ const StepTwo = () => {
         <textarea
           id="keyprompt"
           rows={6}
+          {...register('keyprompt')}
           placeholder="Enter key prompt"
           className="w-full rounded-lg border-[1.5px] resize-none border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
         ></textarea>
@@ -54,7 +45,10 @@ const StepTwo = () => {
           </Tooltip>
         </label>
         <div className="relative z-20 bg-white dark:bg-form-input">
-          <select className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-4 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
+          <select
+            {...register('model')}
+            className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-4 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
+          >
             <option value="">GPT-3.5-turbo</option>
             <option value="">GPT-3.5-turbo-16k</option>
             <option value="">GPT-4</option>

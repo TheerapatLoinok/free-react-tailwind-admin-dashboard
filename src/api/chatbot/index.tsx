@@ -17,3 +17,13 @@ export const chatbotHistoryAPI = (params: ParamsType) => {
   };
   return http.get(`/history-chat`, param, true);
 };
+
+export const uploadFileTextAPI = (files: File) => {
+  const body = {
+    file: files,
+  };
+  return http.post('/file/upload-data', body, {
+    withAuth: true,
+    withFromData: true,
+  });
+};

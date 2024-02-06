@@ -1,7 +1,49 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Breadcrumb from '../components/Breadcrumb';
+import { v4 as uuidv4 } from 'uuid';
+import { chatAPI } from '../api/chatbot';
+import moment from 'moment';
 const ChatAI = () => {
   const [question, setQuestion] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [answer, setAnswer] = useState('');
+  const [uid, setUid] = useState('');
+
+  const handleSubmit = async () => {
+    try {
+      setIsLoading(true);
+      setAnswer('');
+      if (question.trim() === '' || !uid) return;
+      await chatAPI(question, uid.toString());
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const date = moment(new Date()).unix();
+    setUid(date.toString());
+    const socket = new WebSocket(
+      `wss://app.boostviewpro.com/message-stream?sender=${date.toString()}`,
+    );
+    socket.onopen = () => {
+      console.log('WebSocket connection established.');
+    };
+    socket.onmessage = (event) => {
+      if (event.data !== 'start message' && event.data !== 'end message') {
+        setAnswer((prev) => prev + event.data);
+      }
+    };
+    socket.onclose = () => {
+      console.log('WebSocket connection closed.');
+    };
+
+    return () => {
+      socket.close();
+    };
+  }, []);
   return (
     <>
       <Breadcrumb
@@ -31,9 +73,15 @@ const ChatAI = () => {
               className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             />
           </div>
+          {answer.trim() !== '' && (
+            <div className="p-4 border-[1px] border-stroke rounded-lg duration-300 max-h-[400px] overflow-y-auto">
+              <p className="whitespace-pre-line">{answer}</p>
+            </div>
+          )}
           <button
             type="button"
-            disabled={question.trim() === ''}
+            onClick={() => handleSubmit()}
+            disabled={question.trim() === '' || isLoading}
             className="py-2 bg-primary disabled:bg-body disabled:bg-opacity-80 hover:bg-opacity-90 rounded-lg text-white text-sm"
           >
             Search

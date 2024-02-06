@@ -50,6 +50,7 @@ const NumberofChuncks = () => {
   };
   const getSettingDefaults = async () => {
     try {
+      setIsEdit(false);
       const data = (await getSettingsModel()) as any;
       if (data) {
         setChuncks(data.numberChunk ?? '');
@@ -93,6 +94,7 @@ const NumberofChuncks = () => {
               id="numberOfChunks"
               type="text"
               placeholder="Enter number of chunck"
+              value={chuncks}
               onChange={(e) => {
                 setChuncks(e.target.value), setIsEdit(true);
               }}

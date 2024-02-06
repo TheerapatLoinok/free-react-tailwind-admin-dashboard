@@ -15,7 +15,6 @@ const TableHistory = ({ data }: TableHistoryProps) => {
       setViewData(data);
     }
   };
-  console.log('viewData', viewData);
   return (
     <>
       <div className="flex flex-col">

@@ -6,8 +6,8 @@ import Tooltip from '../../common/ ToolTip';
 import { IoHelpCircleSharp } from 'react-icons/io5';
 
 const UploadFiles = () => {
-  const [chunck, setChunck] = useState('');
-  const [overlap, setOverlap] = useState('');
+  const [chunck, setChunck] = useState<string>('');
+  const [overlap, setOverlap] = useState<string>('');
   const [files, setFiles] = useState<File>();
   const [isEdit, setIsEdit] = useState(false);
   const handleUploadFile = (event: ChangeEvent<HTMLInputElement>) => {
@@ -70,7 +70,7 @@ const UploadFiles = () => {
   };
 
   useEffect(() => {
-    if (files && chunck.trim() !== '' && overlap.trim() !== '') {
+    if (files && chunck !== '' && overlap !== '') {
       setIsEdit(true);
     } else {
       setIsEdit(false);

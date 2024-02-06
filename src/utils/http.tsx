@@ -12,7 +12,7 @@ interface PostOptions {
 
 const instance = axios.create({
   baseURL: import.meta.env.VITE_API_DOMAIN,
-  timeout: 10000,
+  timeout: 1000000,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -27,9 +27,8 @@ const authHeader = async (): Promise<{ Authorization: string }> => {
         Date.parse(localStorage.getItem('expired_at') ?? '0'),
       );
       const currentTime = new Date();
-      console.log('work :>> ', accessToken);
+
       if (currentTime.getTime() >= expiredAt.getTime()) {
-        console.log('work :>> ', currentTime.getTime() >= expiredAt.getTime());
         const refreshToken = localStorage.getItem('refresh_token');
         let config = {
           method: 'get',
@@ -39,11 +38,10 @@ const authHeader = async (): Promise<{ Authorization: string }> => {
             Authorization: `Bearer ${refreshToken}`,
           },
         };
-        const data = (await axios.request(config)) as any;
-        console.log('work :>> ', data);
+        const { data } = (await axios.request(config)) as any;
         const date = new Date();
-        localStorage.setItem('access_token', data.accessToken);
-        localStorage.setItem('refresh_token', data.refreshToekn);
+        localStorage.setItem('access_token', data?.accessToken);
+        localStorage.setItem('refresh_token', data?.refreshToekn);
         localStorage.setItem('token_type', 'Bearer');
         localStorage.setItem(
           'expired_at',

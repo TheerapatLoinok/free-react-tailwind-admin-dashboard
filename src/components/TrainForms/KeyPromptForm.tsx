@@ -45,6 +45,7 @@ const KeyPromptandModel = () => {
 
   const getSettingDefaults = async () => {
     try {
+      setIsEdit(false);
       const data = (await getSettingsModel()) as any;
       if (data) {
         setPrompt(data.prompt);

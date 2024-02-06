@@ -52,6 +52,14 @@ export const setKeyPromptAPI = (prompt: string, model: string) => {
   });
 };
 
+export const chatAPI = (question: string, uuid: string) => {
+  const body = {
+    question: question,
+    uuid: uuid,
+  };
+  return http.post('/test/chat', body, { withAuth: true, withFromData: false });
+};
+
 export const searchContext = (question: string) => {
   const boddy = {
     question: question,

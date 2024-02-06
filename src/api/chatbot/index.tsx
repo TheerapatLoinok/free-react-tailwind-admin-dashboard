@@ -40,3 +40,37 @@ export const setNumberofChunckAPI = (chunck: number) => {
     withFromData: false,
   });
 };
+
+export const setKeyPromptAPI = (prompt: string) => {
+  const body = {
+    prompt: prompt,
+  };
+  return http.post('/set/prompt-test', body, {
+    withAuth: true,
+    withFromData: false,
+  });
+};
+
+export const setModelAPI = (model: string) => {
+  const body = {
+    model: model,
+  };
+  return http.post('set/model-test', body, {
+    withAuth: true,
+    withFromData: false,
+  });
+};
+
+export const searchContext = (question: string) => {
+  const boddy = {
+    question: question,
+  };
+  return http.post('/test/search-context-v2', boddy, {
+    withAuth: true,
+    withFromData: false,
+  });
+};
+
+export const getSettingsModel = () => {
+  return http.get('/get/setting-model-test-server', {}, true);
+};

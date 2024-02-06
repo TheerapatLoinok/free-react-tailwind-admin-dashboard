@@ -2,10 +2,48 @@ import { IoHelpCircleSharp } from 'react-icons/io5';
 import Tooltip from '../../common/ ToolTip';
 import { useState } from 'react';
 import Breadcrumb from '../Breadcrumb';
+import { setKeyPromptAPI, setModelAPI } from '../../api/chatbot';
+import { toast } from 'react-toastify';
 
 const KeyPromptandModel = () => {
   const [model, setModel] = useState('');
   const [prompt, setPrompt] = useState('');
+
+  const handleSubmit = async () => {
+    try {
+      if (model.trim() !== '' && prompt.trim() !== '') {
+        const responsePrompt = await setKeyPromptAPI(prompt);
+        const responseModel = await setModelAPI(model);
+        if (responseModel && responsePrompt) {
+          toast.success('Set key promt and model success', {
+            position: 'bottom-left',
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: 'colored',
+          });
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error('Set key promt and model failed', {
+        position: 'bottom-left',
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: 'colored',
+      });
+    }
+  };
+
+  console.log('prompt', prompt);
+  console.log('model', model);
   return (
     <>
       <Breadcrumb
@@ -37,6 +75,7 @@ const KeyPromptandModel = () => {
             </label>
             <textarea
               id="keyprompt"
+              onChange={(e) => setPrompt(e.target.value)}
               rows={6}
               placeholder="Enter key prompt"
               className="w-full rounded-lg border-[1.5px] resize-none border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -55,10 +94,13 @@ const KeyPromptandModel = () => {
               </Tooltip>
             </label>
             <div className="relative z-20 bg-white dark:bg-form-input">
-              <select className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-4 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
-                <option value="">GPT-3.5-turbo</option>
-                <option value="">GPT-3.5-turbo-16k</option>
-                <option value="">GPT-4</option>
+              <select
+                onChange={(e) => setModel(e.target.value)}
+                className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-4 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
+              >
+                <option value="gpt-3.5-turbo">GPT-3.5-turbo</option>
+                <option value="gpt-3.5-turbo-16k">GPT-3.5-turbo-16k</option>
+                <option value="gpt-4">GPT-4</option>
               </select>
               <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">
                 <svg
@@ -83,6 +125,7 @@ const KeyPromptandModel = () => {
           <button
             type="button"
             disabled={model.trim() === '' || prompt.trim() === ''}
+            onClick={() => handleSubmit()}
             className="py-2 bg-primary disabled:bg-body disabled:bg-opacity-80 hover:bg-opacity-90 rounded-lg text-white text-sm"
           >
             Save

@@ -2,9 +2,22 @@ import { IoHelpCircleSharp } from 'react-icons/io5';
 import Tooltip from '../common/ ToolTip';
 import { useState } from 'react';
 import Breadcrumb from '../components/Breadcrumb';
+import { searchContext } from '../api/chatbot';
 
 const Chuncks = () => {
   const [question, setQuestion] = useState('');
+  const [answer, setAnswer] = useState('');
+  const handleSubmit = async () => {
+    try {
+      if (question.trim() === '') return;
+      const data = (await searchContext(question)) as string;
+      if (data) {
+        setAnswer(data);
+      }
+    } catch (error) {
+      console.log('error :>> ', error);
+    }
+  };
   return (
     <>
       <Breadcrumb
@@ -32,8 +45,15 @@ const Chuncks = () => {
               className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             />
           </div>
+          {answer.trim() !== '' && (
+            <p
+              className="max-h-[300px] overflow-y-auto p-4 border-[1px] rounded-lg border-stroke"
+              dangerouslySetInnerHTML={{ __html: answer }}
+            />
+          )}
           <button
             type="button"
+            onClick={() => handleSubmit()}
             disabled={question.trim() === ''}
             className="py-2 bg-primary disabled:bg-body disabled:bg-opacity-80 hover:bg-opacity-90 rounded-lg text-white text-sm"
           >

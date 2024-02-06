@@ -1,6 +1,6 @@
 import Breadcrumb from '../Breadcrumb';
-import { ChangeEvent, useState } from 'react';
-import { convertFiletoVector } from '../../api/chatbot';
+import { ChangeEvent, useEffect, useState } from 'react';
+import { convertFiletoVector, getSettingsModel } from '../../api/chatbot';
 import { toast } from 'react-toastify';
 import Tooltip from '../../common/ ToolTip';
 import { IoHelpCircleSharp } from 'react-icons/io5';
@@ -9,14 +9,17 @@ const UploadFiles = () => {
   const [chunck, setChunck] = useState('');
   const [overlap, setOverlap] = useState('');
   const [files, setFiles] = useState<File>();
+  const [isEdit, setIsEdit] = useState(false);
   const handleUploadFile = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       setFiles(event.target.files[0]);
+      setIsEdit(true);
     }
   };
   const handleCreateVector = async () => {
     try {
       if (!files) return;
+      setIsEdit(false);
       const payload = {
         file: files,
         chunk: chunck,
@@ -49,6 +52,29 @@ const UploadFiles = () => {
       });
     }
   };
+  const handleChangeChunck = (chunck: string) => {
+    setChunck(chunck);
+    setIsEdit(true);
+  };
+  const handleChangeOverlap = (overlap: string) => {
+    setOverlap(overlap);
+    setIsEdit(true);
+  };
+  const getSettingDefaults = async () => {
+    try {
+      const data = (await getSettingsModel()) as any;
+      if (data) {
+        setChunck(data.chunk ?? '');
+        setOverlap(data.overlap ?? '');
+      }
+    } catch (error) {
+      console.log('error :>> ', error);
+    }
+  };
+
+  useEffect(() => {
+    getSettingDefaults();
+  }, []);
 
   return (
     <>
@@ -89,7 +115,8 @@ const UploadFiles = () => {
             <input
               id="chunck"
               type="text"
-              onChange={(e) => setChunck(e.target.value)}
+              value={chunck}
+              onChange={(e) => handleChangeChunck(e.target.value)}
               onKeyPress={(event) => {
                 if (!/^\d+$/.test(event.key)) {
                   event.preventDefault();
@@ -117,7 +144,8 @@ const UploadFiles = () => {
             <input
               id="overlap"
               type="text"
-              onChange={(e) => setOverlap(e.target.value)}
+              value={overlap}
+              onChange={(e) => handleChangeOverlap(e.target.value)}
               onKeyPress={(event) => {
                 if (!/^\d+$/.test(event.key)) {
                   event.preventDefault();
@@ -130,7 +158,7 @@ const UploadFiles = () => {
           <button
             type="button"
             onClick={() => handleCreateVector()}
-            disabled={chunck.trim() === '' || overlap.trim() === '' || !files}
+            disabled={!isEdit}
             className="py-2 bg-primary disabled:bg-body disabled:bg-opacity-80 hover:bg-opacity-90 rounded-lg text-white text-sm"
           >
             Create to vector

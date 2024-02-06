@@ -106,18 +106,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
             <ul className="mb-6 flex flex-col gap-1.5">
               {/* <!-- Menu Item History --> */}
-              <li>
-                <NavLink
-                  to="/"
-                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes('/history') &&
-                    'bg-graydark dark:bg-meta-4'
-                  }`}
-                >
-                  <FaHistory size={18} className="fill-current" />
-                  History
-                </NavLink>
-              </li>
               {/* <!-- Menu Item History --> */}
 
               {/* <!-- Menu Item Train bot --> */}
@@ -134,9 +122,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               </li>
               <li>
                 <NavLink
-                  to="/chuncks"
+                  to="/test-chuncks"
                   className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes('chuncks') && 'bg-graydark dark:bg-meta-4'
+                    pathname.includes('test-chuncks') &&
+                    'bg-graydark dark:bg-meta-4'
                   }`}
                 >
                   <BsStackOverflow size={18} />
@@ -144,9 +133,21 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 </NavLink>
               </li>
               <li>
+                <NavLink
+                  to="/history"
+                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                    pathname.includes('/history') &&
+                    'bg-graydark dark:bg-meta-4'
+                  }`}
+                >
+                  <FaHistory size={18} className="fill-current" />
+                  History
+                </NavLink>
+              </li>
+              <li>
                 <SidebarLinkGroup
                   activeCondition={
-                    pathname === '/' || pathname.includes('dashboard')
+                    pathname === '/' || pathname.includes('settings')
                   }
                 >
                   {(handleClick, open) => {

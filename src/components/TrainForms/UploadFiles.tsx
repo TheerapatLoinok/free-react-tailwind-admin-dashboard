@@ -13,7 +13,6 @@ const UploadFiles = () => {
   const handleUploadFile = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       setFiles(event.target.files[0]);
-      setIsEdit(true);
     }
   };
   const handleCreateVector = async () => {
@@ -38,9 +37,9 @@ const UploadFiles = () => {
           theme: 'colored',
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      toast.error('Convert to vector failed', {
+      toast.error(error.response.data.message, {
         position: 'bottom-left',
         autoClose: 3000,
         hideProgressBar: true,
@@ -54,11 +53,9 @@ const UploadFiles = () => {
   };
   const handleChangeChunck = (chunck: string) => {
     setChunck(chunck);
-    setIsEdit(true);
   };
   const handleChangeOverlap = (overlap: string) => {
     setOverlap(overlap);
-    setIsEdit(true);
   };
   const getSettingDefaults = async () => {
     try {
@@ -68,9 +65,17 @@ const UploadFiles = () => {
         setOverlap(data.overlap ?? '');
       }
     } catch (error) {
-      console.log('error :>> ', error);
+      console.log(error);
     }
   };
+
+  useEffect(() => {
+    if (files && chunck.trim() !== '' && overlap.trim() !== '') {
+      setIsEdit(true);
+    } else {
+      setIsEdit(false);
+    }
+  }, [files, chunck, overlap]);
 
   useEffect(() => {
     getSettingDefaults();
@@ -89,8 +94,11 @@ const UploadFiles = () => {
         </h3>
         <div className="flex flex-col gap-4 mb-2">
           <div className="flex flex-col gap-2">
-            <label className="text-black text-sm block">Attach file</label>
+            <label htmlFor="uploadfile" className="text-black text-sm block">
+              Attach file
+            </label>
             <input
+              id="uploadfile"
               type="file"
               accept="text/plain"
               onChange={handleUploadFile}

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import moment from 'moment';
 
 interface Params {
   [key: string]: any;
@@ -21,38 +22,36 @@ const authHeader = async (): Promise<{ Authorization: string }> => {
   const accessToken = localStorage.getItem('access_token');
   try {
     if (accessToken) {
-      // <!-- Wait for update api -->
-      // const tokenType = localStorage.getItem('token_type');
-      // const expiredAt = new Date(
-      //   Date.parse(localStorage.getItem('expired_at') ?? '0'),
-      // );
-      // const currentTime = new Date();
-      // if (currentTime.getTime() >= expiredAt.getTime()) {
-      //   const refreshToken = localStorage.getItem('refresh_token');
-      //   let payload = {
-      //     grant_type: 'refresh_token',
-      //     refresh_token: refreshToken,
-      //   };
-
-      //   //In case tokens have expired we need to refresh the token
-      //   // const data: UserDataType = (await post(
-      //   //   `/core/api/managements/1.0/token`,
-      //   //   payload,
-      //   //   false,
-      //   //   true,
-      //   //   false
-      //   // )) as UserDataType;
-
-      //   //Set new info of user to localStorage
-
-      //   // localStorage.setItem('token_type', data.tokenType);
-      //   // localStorage.setItem('access_token', data.accessToken);
-      //   // localStorage.setItem('refresh_token', data.refreshToken);
-      //   // localStorage.setItem('expired_at', data.expiredAt);
-      //   return authHeader();
-      // }
-      // return { Authorization: `${tokenType} ${accessToken}` };
-      return { Authorization: `Bearer ${accessToken}` };
+      const tokenType = localStorage.getItem('token_type');
+      const expiredAt = new Date(
+        Date.parse(localStorage.getItem('expired_at') ?? '0'),
+      );
+      const currentTime = new Date();
+      console.log('work :>> ', accessToken);
+      if (currentTime.getTime() >= expiredAt.getTime()) {
+        console.log('work :>> ', currentTime.getTime() >= expiredAt.getTime());
+        const refreshToken = localStorage.getItem('refresh_token');
+        let config = {
+          method: 'get',
+          maxBodyLength: Infinity,
+          url: `${import.meta.env.VITE_API_DOMAIN}/refresh-token`,
+          headers: {
+            Authorization: `Bearer ${refreshToken}`,
+          },
+        };
+        const data = (await axios.request(config)) as any;
+        console.log('work :>> ', data);
+        const date = new Date();
+        localStorage.setItem('access_token', data.accessToken);
+        localStorage.setItem('refresh_token', data.refreshToekn);
+        localStorage.setItem('token_type', 'Bearer');
+        localStorage.setItem(
+          'expired_at',
+          moment(date).add(10, 'minutes').toString(),
+        );
+        return authHeader();
+      }
+      return { Authorization: `${tokenType} ${accessToken}` };
     } else {
       throw new Error('Unauthorized');
     }
@@ -67,7 +66,7 @@ const handleError = (err: any) => {
   localStorage.removeItem('refresh_token');
   localStorage.removeItem('extension');
   localStorage.removeItem('user');
-  window.location.reload();
+  window.location.href = '/';
   throw err;
 };
 

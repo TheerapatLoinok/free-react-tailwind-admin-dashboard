@@ -1,8 +1,8 @@
 import { IoHelpCircleSharp } from 'react-icons/io5';
 import Tooltip from '../../common/ ToolTip';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Breadcrumb from '../Breadcrumb';
-import { setNumberofChunckAPI } from '../../api/chatbot';
+import { getSettingsModel, setNumberofChunckAPI } from '../../api/chatbot';
 import { toast } from 'react-toastify';
 
 type SetChunckType = {
@@ -12,9 +12,11 @@ type SetChunckType = {
 
 const NumberofChuncks = () => {
   const [chuncks, setChuncks] = useState('');
+  const [isEdit, setIsEdit] = useState(false);
   const handleSetChuncks = async () => {
     try {
       if (chuncks.trim() !== '') {
+        setIsEdit(false);
         const data = (await setNumberofChunckAPI(
           Number(chuncks),
         )) as SetChunckType;
@@ -32,9 +34,9 @@ const NumberofChuncks = () => {
         }
       }
       return;
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      toast.error('Set number of chunck failed', {
+      toast.error(error.response.data.message, {
         position: 'bottom-left',
         autoClose: 3000,
         hideProgressBar: true,
@@ -46,6 +48,20 @@ const NumberofChuncks = () => {
       });
     }
   };
+  const getSettingDefaults = async () => {
+    try {
+      const data = (await getSettingsModel()) as any;
+      if (data) {
+        setChuncks(data.numberChunk ?? '');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getSettingDefaults();
+  }, []);
   return (
     <>
       <Breadcrumb
@@ -77,7 +93,9 @@ const NumberofChuncks = () => {
               id="numberOfChunks"
               type="text"
               placeholder="Enter number of chunck"
-              onChange={(e) => setChuncks(e.target.value)}
+              onChange={(e) => {
+                setChuncks(e.target.value), setIsEdit(true);
+              }}
               onKeyPress={(event) => {
                 if (!/^\d+$/.test(event.key)) {
                   event.preventDefault();
@@ -89,7 +107,7 @@ const NumberofChuncks = () => {
           <button
             type="button"
             onClick={() => handleSetChuncks()}
-            disabled={chuncks.trim() === ''}
+            disabled={!isEdit}
             className="py-2 bg-primary disabled:bg-body disabled:bg-opacity-80 hover:bg-opacity-90 rounded-lg text-white text-sm"
           >
             Save

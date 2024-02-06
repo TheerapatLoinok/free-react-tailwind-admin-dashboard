@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { SignInAPI } from '../../api/auth';
@@ -12,6 +13,7 @@ type UserType = {
   statusCode: number;
   message: string;
   accessToken: string;
+  refreshToekn: string;
 };
 
 const SignIn = () => {
@@ -30,7 +32,14 @@ const SignIn = () => {
           password: data.password,
         })) as UserType;
         if (user) {
+          const date = new Date();
           localStorage.setItem('access_token', user.accessToken);
+          localStorage.setItem('refresh_token', user.refreshToekn);
+          localStorage.setItem('token_type', 'Bearer');
+          localStorage.setItem(
+            'expired_at',
+            moment(date).add(10, 'minutes').toString(),
+          );
           window.location.href = `/`;
         }
       }

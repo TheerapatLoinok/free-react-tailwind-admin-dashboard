@@ -1,20 +1,21 @@
 import { IoHelpCircleSharp } from 'react-icons/io5';
 import Tooltip from '../../common/ ToolTip';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Breadcrumb from '../Breadcrumb';
-import { setKeyPromptAPI, setModelAPI } from '../../api/chatbot';
+import { getSettingsModel, setKeyPromptAPI } from '../../api/chatbot';
 import { toast } from 'react-toastify';
 
 const KeyPromptandModel = () => {
   const [model, setModel] = useState('');
   const [prompt, setPrompt] = useState('');
+  const [isEdit, setIsEdit] = useState(false);
 
   const handleSubmit = async () => {
     try {
       if (model.trim() !== '' && prompt.trim() !== '') {
-        const responsePrompt = await setKeyPromptAPI(prompt);
-        const responseModel = await setModelAPI(model);
-        if (responseModel && responsePrompt) {
+        const responsePrompt = await setKeyPromptAPI(prompt, model);
+
+        if (responsePrompt) {
           toast.success('Set key promt and model success', {
             position: 'bottom-left',
             autoClose: 3000,
@@ -42,8 +43,22 @@ const KeyPromptandModel = () => {
     }
   };
 
-  console.log('prompt', prompt);
-  console.log('model', model);
+  const getSettingDefaults = async () => {
+    try {
+      const data = (await getSettingsModel()) as any;
+      if (data) {
+        setPrompt(data.prompt);
+        setModel(data.model);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getSettingDefaults();
+  }, []);
+
   return (
     <>
       <Breadcrumb
@@ -75,8 +90,11 @@ const KeyPromptandModel = () => {
             </label>
             <textarea
               id="keyprompt"
-              onChange={(e) => setPrompt(e.target.value)}
+              onChange={(e) => {
+                setPrompt(e.target.value), setIsEdit(true);
+              }}
               rows={6}
+              value={prompt}
               placeholder="Enter key prompt"
               className="w-full rounded-lg border-[1.5px] resize-none border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             ></textarea>
@@ -95,7 +113,10 @@ const KeyPromptandModel = () => {
             </label>
             <div className="relative z-20 bg-white dark:bg-form-input">
               <select
-                onChange={(e) => setModel(e.target.value)}
+                onChange={(e) => {
+                  setModel(e.target.value), setIsEdit(true);
+                }}
+                value={model}
                 className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-4 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
               >
                 <option value="gpt-3.5-turbo">GPT-3.5-turbo</option>
@@ -124,7 +145,7 @@ const KeyPromptandModel = () => {
           </div>
           <button
             type="button"
-            disabled={model.trim() === '' || prompt.trim() === ''}
+            disabled={!isEdit}
             onClick={() => handleSubmit()}
             className="py-2 bg-primary disabled:bg-body disabled:bg-opacity-80 hover:bg-opacity-90 rounded-lg text-white text-sm"
           >

@@ -176,7 +176,7 @@ const History = () => {
               htmlFor="conversation"
               className=" block text-black text-sm dark:text-white truncate"
             >
-              Search conversation with id
+              Search questions with id
             </label>
             <div className="py-3 px-5  border-[1.5px] rounded-lg border-stroke">
               <div className="relative">

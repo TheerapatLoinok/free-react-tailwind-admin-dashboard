@@ -1,11 +1,11 @@
 import { lazy } from 'react';
-
 const Profile = lazy(() => import('../pages/Profile'));
 const UploadFiles = lazy(() => import('../components/TrainForms/UploadFiles'))
 const  NumberofChuncks = lazy(() => import('../components/TrainForms/NumberofChunck'))
 const KeypromptandModel = lazy(() => import('../components/TrainForms/KeyPromptForm'))
 const Chuncks = lazy(() => import('../pages/Chuncks'))
 const ChatAI = lazy(() => import('../pages/ChatAI'))
+const History = lazy(() => import('../pages/History'));
 
 const coreRoutes = [
  
@@ -20,7 +20,7 @@ const coreRoutes = [
     component: ChatAI,
   },
   {
-    path: '/chuncks',
+    path: '/test-chuncks',
     title: 'Test Chuncks',
     component: Chuncks,
   },
@@ -38,6 +38,11 @@ const coreRoutes = [
     path: '/settings/keyprompt-and-model',
     title: 'Keyprompt and Model',
     component: KeypromptandModel,
+  },
+  {
+    path: '/history',
+    title: 'History',
+    component: History,
   }
  
 ];

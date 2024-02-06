@@ -7,15 +7,19 @@ import { searchContext } from '../api/chatbot';
 const Chuncks = () => {
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const handleSubmit = async () => {
     try {
+      setIsLoading(true);
       if (question.trim() === '') return;
       const data = (await searchContext(question)) as string;
       if (data) {
         setAnswer(data);
       }
+      setIsLoading(false);
     } catch (error) {
-      console.log('error :>> ', error);
+      console.log(error);
+      setIsLoading(false);
     }
   };
   return (
@@ -45,11 +49,19 @@ const Chuncks = () => {
               className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             />
           </div>
-          {answer.trim() !== '' && (
-            <p
-              className="max-h-[300px] overflow-y-auto p-4 border-[1px] rounded-lg border-stroke"
-              dangerouslySetInnerHTML={{ __html: answer }}
-            />
+          {isLoading ? (
+            <p className="flex justify-center items-center text-sm">
+              Loding...
+            </p>
+          ) : (
+            <>
+              {answer.trim() !== '' && (
+                <p
+                  className="max-h-[300px] overflow-y-auto p-4 border-[1px] rounded-lg border-stroke"
+                  dangerouslySetInnerHTML={{ __html: answer }}
+                />
+              )}
+            </>
           )}
           <button
             type="button"

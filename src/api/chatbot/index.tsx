@@ -41,21 +41,12 @@ export const setNumberofChunckAPI = (chunck: number) => {
   });
 };
 
-export const setKeyPromptAPI = (prompt: string) => {
+export const setKeyPromptAPI = (prompt: string, model: string) => {
   const body = {
     prompt: prompt,
-  };
-  return http.post('/set/prompt-test', body, {
-    withAuth: true,
-    withFromData: false,
-  });
-};
-
-export const setModelAPI = (model: string) => {
-  const body = {
     model: model,
   };
-  return http.post('set/model-test', body, {
+  return http.post('/set/promt-model/test', body, {
     withAuth: true,
     withFromData: false,
   });

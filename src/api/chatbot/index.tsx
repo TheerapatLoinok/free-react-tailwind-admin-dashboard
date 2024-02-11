@@ -1,8 +1,8 @@
 import { http } from '../../utils/http';
 
 export type ParamsType = {
-  page: number;
-  limit: number;
+  page?: number;
+  limit?: number;
   conversationId?: number;
   startDate?: string;
   endDate?: string;

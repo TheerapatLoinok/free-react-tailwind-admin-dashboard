@@ -113,6 +113,8 @@ const History = () => {
     fetchHistory();
   }, [page, limit, startDate, endDate, conversationId]);
 
+  console.log('rowsData :>> ', rowsData);
+
   return (
     <>
       <Breadcrumb mainPageName="History" mainPagePath="/" pageName="History" />

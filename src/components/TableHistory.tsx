@@ -1,7 +1,9 @@
 import moment from 'moment';
-import { useState } from 'react';
-import { Item } from '../pages/History';
+import { useEffect, useState } from 'react';
+import { HistoryType, Item } from '../pages/History';
 import Modal from '../common/Modal/index';
+import { chatbotHistoryAPI } from '../api/chatbot';
+import _ from 'lodash';
 
 interface TableHistoryProps {
   data: Item[];
@@ -9,22 +11,45 @@ interface TableHistoryProps {
 const TableHistory = ({ data }: TableHistoryProps) => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [viewData, setViewData] = useState<Item>();
+  const [singleConversation, setSingleConversation] = useState<Item[]>([]);
+  const getConversationById = async () => {
+    try {
+      const params = {
+        conversationId: viewData?.conversationId ?? 0,
+        page: 1,
+        limit: 99999,
+      };
+      const data = (await chatbotHistoryAPI(params)) as HistoryType;
+      if (data) {
+        setSingleConversation(_.reverse([...data.items]));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const handleViewData = (data: Item) => {
     if (data) {
       setIsOpenModal(true);
       setViewData(data);
     }
   };
+  useEffect(() => {
+    if (!viewData || viewData === undefined) {
+      return;
+    }
+    getConversationById();
+  }, [viewData]);
+
   return (
     <>
       <div className="flex flex-col">
-        <div className="grid grid-cols-5 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-5 ">
+        <div className="grid grid-cols-3 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-3 ">
           <div className=" p-2.5 xl:p-5">
             <h5 className="text-sm font-medium uppercase xsm:text-base">
               Question ID
             </h5>
           </div>
-          <div className="p-2.5 xl:p-5">
+          {/* <div className="p-2.5 xl:p-5">
             <h5 className="text-sm font-medium uppercase xsm:text-base">
               Question
             </h5>
@@ -33,7 +58,7 @@ const TableHistory = ({ data }: TableHistoryProps) => {
             <h5 className="text-sm font-medium uppercase xsm:text-base">
               Recommendations
             </h5>
-          </div>
+          </div> */}
           <div className="p-2.5 text-center xl:p-5">
             <h5 className="text-sm font-medium uppercase xsm:text-base">
               Date
@@ -50,14 +75,14 @@ const TableHistory = ({ data }: TableHistoryProps) => {
             {data.map((item, index) => (
               <div
                 key={index}
-                className="grid grid-cols-5 border-b border-stroke dark:border-strokedark sm:grid-cols-5"
+                className="grid grid-cols-3 border-b border-stroke dark:border-strokedark sm:grid-cols-3"
               >
                 <div className="flex items-center p-2.5 xl:p-5">
                   <p className="text-black dark:text-white sm:block">
                     {item.conversationId ?? 'NaN'}
                   </p>
                 </div>
-                <div className="flex items-start justify-start p-2.5 xl:p-5">
+                {/* <div className="flex items-start justify-start p-2.5 xl:p-5">
                   <p className="text-black dark:text-white">
                     {item.messageUser}
                   </p>
@@ -66,7 +91,7 @@ const TableHistory = ({ data }: TableHistoryProps) => {
                   <p className="text-black line-clamp-2  dark:text-white">
                     {item.messageAssistance}
                   </p>
-                </div>
+                </div> */}
                 <div className="flex items-start justify-center p-2.5 xl:p-5">
                   <p className="text-black">
                     {moment(item.createdAt).format('MMM Do YY')}
@@ -105,18 +130,23 @@ const TableHistory = ({ data }: TableHistoryProps) => {
               {moment(viewData?.createdAt).format('MMM Do YY')}
             </span>
           </p>
-          <p className="text-sm font-semibold text-black">
-            QUESTION :{' '}
-            <span className="font-normal">
-              {viewData?.messageUser ?? 'NaN'}
-            </span>
-          </p>
           <div className="flex flex-col gap-1 max-h-[500px]">
-            <p className="text-sm font-semibold text-black">RECOMMENDATIONS</p>
-            <div className="p-2 border-[1px] border-stroke rounded-md overflow-y-auto">
-              <p className="text-sm text-black font-normal">
-                {viewData?.messageAssistance}
-              </p>
+            <p className="text-sm font-semibold text-black">Conversation</p>
+            <div className="p-2 border-[1px] border-stroke rounded-md overflow-y-auto flex flex-col gap-4">
+              {singleConversation.map((conversation, index) => (
+                <div key={index} className="flex flex-col gap-4">
+                  <div className="self-end max-w-[80%]">
+                    <p className="p-2 w-fit rounded-lg bg-primary  text-sm text-white">
+                      {conversation.messageUser}
+                    </p>
+                  </div>
+                  <div className="self-start max-w-[80%]">
+                    <p className="p-2 w-fit rounded-lg bg-stroke  text-sm text-black">
+                      {conversation.messageAssistance}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>

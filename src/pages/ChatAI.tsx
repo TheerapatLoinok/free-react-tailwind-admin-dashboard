@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import Breadcrumb from '../components/Breadcrumb';
-import { v4 as uuidv4 } from 'uuid';
 import { chatAPI } from '../api/chatbot';
 import moment from 'moment';
 const ChatAI = () => {

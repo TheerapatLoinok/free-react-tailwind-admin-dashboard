@@ -4,6 +4,7 @@ export type ParamsType = {
   page?: number;
   limit?: number;
   conversationId?: number;
+  conversationGroupId?: number;
   startDate?: string;
   endDate?: string;
 };
@@ -18,6 +19,7 @@ export const chatbotHistoryAPI = (params: ParamsType) => {
     page: params.page ?? 1,
     limit: params.limit ?? 10,
     conversationId: params.conversationId,
+    conversationGroupId: params.conversationGroupId,
     startDate: params.startDate,
     endDate: params.endDate,
   };

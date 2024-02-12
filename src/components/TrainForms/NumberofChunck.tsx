@@ -82,7 +82,7 @@ const NumberofChuncks = () => {
             >
               Number of chunck
               <Tooltip
-                text={`"Number of chunk" refers to the quantity of subdivisions or parts that are divided from data or text for analysis or processing purposes.`}
+                text={`Chunk is the division of text data into smaller pieces. according to the specified characteristics In order to process data efficiently and conveniently for further analysis and use.`}
                 className="bg-black p-2 text-white text-xs absolute z-10 rounded-lg top-0 -mt-7  w-[200px] h-auto"
               >
                 <span>

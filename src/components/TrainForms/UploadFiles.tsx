@@ -95,7 +95,10 @@ const UploadFiles = () => {
         <div className="flex flex-col gap-4 mb-2">
           <div className="flex flex-col gap-2">
             <label htmlFor="uploadfile" className="text-black text-sm block">
-              Attach file
+              Attach file{' '}
+              <span className="text-xs ">
+                ( Only text files are supported. )
+              </span>
             </label>
             <input
               id="uploadfile"
@@ -112,7 +115,7 @@ const UploadFiles = () => {
             >
               Chunck
               <Tooltip
-                text="Segments for processing or analysis. Each segment retains its own semantic meaning and relates to the context of the data it belongs to."
+                text="Chunk is the division of text data into smaller pieces. according to the specified characteristics In order to process data efficiently and conveniently for further analysis and use."
                 className="bg-black p-2 text-white text-xs absolute z-10 rounded-lg top-0 -mt-7 w-[200px] h-auto"
               >
                 <span>
@@ -141,7 +144,7 @@ const UploadFiles = () => {
             >
               Overlap
               <Tooltip
-                text={`"Overlap text" refers to text that contains some overlapping or repeated parts within the data, such as questions or messages that have similar meanings. It is important in training chatbots because it helps the chatbot learn and understand user responses more accurately and efficiently.`}
+                text={`The part that connects data So that the information will be more continuous and meaningful.`}
                 className="bg-black p-2 text-white text-xs absolute z-10 rounded-lg top-0 -mt-7  w-[200px] h-auto"
               >
                 <span>

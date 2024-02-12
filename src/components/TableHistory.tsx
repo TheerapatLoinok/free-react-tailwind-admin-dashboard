@@ -117,7 +117,7 @@ const TableHistory = ({ data }: TableHistoryProps) => {
         )}
       </div>
       <Modal isOpen={isOpenModal} onClose={() => setIsOpenModal(false)}>
-        <div className="flex flex-col gap-4 w-[500px]">
+        <div className="flex flex-col gap-4 w-[calc(100vw_-_56px)] md:w-[500px]">
           <p className="text-sm font-semibold text-black">
             QUESTION ID :{' '}
             <span className="font-normal">

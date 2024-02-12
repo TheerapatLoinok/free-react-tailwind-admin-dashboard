@@ -10,6 +10,7 @@ export type FilterHistoryType = {
   page: number;
   limit: number;
   conversationId?: number;
+  conversationGroupId?: number;
   startDate?: string;
   endDate?: string;
 };
@@ -60,12 +61,13 @@ const History = () => {
       const params = {
         page: page,
         limit: limit,
-        conversationId:
+        conversationGroupId:
           conversationId.trim() !== '' ? Number(conversationId) : undefined,
         startDate: startDate.trim() !== '' ? startDate : undefined,
         endDate: endDate.trim() !== '' ? endDate : undefined,
       };
       const data = (await chatbotHistoryAPI(params)) as HistoryType;
+
       if (data) {
         setRowsData(data.items);
         setMeta({
@@ -112,8 +114,6 @@ const History = () => {
   useEffect(() => {
     fetchHistory();
   }, [page, limit, startDate, endDate, conversationId]);
-
-  console.log('rowsData :>> ', rowsData);
 
   return (
     <>

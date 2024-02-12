@@ -81,7 +81,7 @@ const KeyPromptandModel = () => {
             >
               Key prompt
               <Tooltip
-                text={`"Key prompt" translates to "main text or question used to initiate a response or action in a machine learning system, typically used to generate specific responses or actions.`}
+                text={`A keyprompt is a set of messages or questions. Used for setting the AI to answer questions as we want.`}
                 className="bg-black p-2 text-white text-xs absolute z-10 rounded-lg top-0 -mt-7  w-[200px] h-auto"
               >
                 <span>
@@ -104,7 +104,7 @@ const KeyPromptandModel = () => {
             <label className=" flex gap-2 text-black text-sm dark:text-white">
               Model AI
               <Tooltip
-                text={`"Model AI" refers to an artificial intelligence system or model used to simulate and process data automatically, enabling various tasks such as prediction, classification, or problem-solving to be performed intelligently and specifically.`}
+                text={`Model AI an operating system for analyzing and answering chatbot questions.`}
                 className="bg-black p-2 z-50 text-white text-xs absolute  rounded-lg top-0 -mt-7  w-[200px] h-auto"
               >
                 <span>

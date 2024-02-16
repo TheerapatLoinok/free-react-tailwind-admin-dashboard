@@ -14,6 +14,7 @@ type UserType = {
   message: string;
   accessToken: string;
   refreshToekn: string;
+  accessTokenExpiration: number;
 };
 
 const SignIn = () => {
@@ -32,14 +33,13 @@ const SignIn = () => {
           password: data.password,
         })) as UserType;
         if (user) {
-          const date = new Date();
+          const expiredAt = moment
+            .unix(user.accessTokenExpiration)
+            .format('MMMM Do YYYY, h:mm:ss a');
           localStorage.setItem('access_token', user.accessToken);
           localStorage.setItem('refresh_token', user.refreshToekn);
           localStorage.setItem('token_type', 'Bearer');
-          localStorage.setItem(
-            'expired_at',
-            moment(date).add(10, 'minutes').toString(),
-          );
+          localStorage.setItem('expired_at', expiredAt);
           window.location.href = `/`;
         }
       }

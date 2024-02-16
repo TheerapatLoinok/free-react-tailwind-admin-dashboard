@@ -10,12 +10,8 @@ import ChatAI from './pages/ChatAI';
 const DefaultLayout = lazy(() => import('./layout/DefaultLayout'));
 
 function App() {
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const accessToken = localStorage.getItem('access_token');
-
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 1000);
-  }, []);
 
   return loading ? (
     <Loader />

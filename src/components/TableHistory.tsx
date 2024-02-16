@@ -64,7 +64,7 @@ const TableHistory = ({ data }: TableHistoryProps) => {
               Date
             </h5>
           </div>
-          <div className="hidden p-2.5 text-center sm:block xl:p-5">
+          <div className=" p-2.5 text-center xl:p-5">
             <h5 className="text-sm font-medium uppercase xsm:text-base">
               Details
             </h5>
@@ -109,7 +109,7 @@ const TableHistory = ({ data }: TableHistoryProps) => {
             ))}
           </>
         ) : (
-          <div className="grid grid-cols-5 py-4 ">
+          <div className="grid grid-cols-3 py-4 ">
             <p className="col-span-4 flex justify-center text-sm font-medium">
               Not have data
             </p>

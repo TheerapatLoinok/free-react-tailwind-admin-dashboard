@@ -1,6 +1,10 @@
 import Breadcrumb from '../Breadcrumb';
 import { ChangeEvent, useEffect, useState } from 'react';
-import { convertFiletoVector, getSettingsModel } from '../../api/chatbot';
+import {
+  checkConvertFileStatus,
+  convertFiletoVector,
+  getSettingsModel,
+} from '../../api/chatbot';
 import { toast } from 'react-toastify';
 import Tooltip from '../../common/ ToolTip';
 import { IoHelpCircleSharp } from 'react-icons/io5';
@@ -10,6 +14,7 @@ const UploadFiles = () => {
   const [overlap, setOverlap] = useState<string>('');
   const [files, setFiles] = useState<File>();
   const [isEdit, setIsEdit] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const handleUploadFile = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       setFiles(event.target.files[0]);
@@ -18,6 +23,8 @@ const UploadFiles = () => {
   const handleCreateVector = async () => {
     try {
       if (!files) return;
+
+      setIsLoading(true);
       setIsEdit(false);
       const payload = {
         file: files,
@@ -36,9 +43,11 @@ const UploadFiles = () => {
           progress: undefined,
           theme: 'colored',
         });
+        setIsLoading(false);
       }
     } catch (error: any) {
       console.log(error);
+      setIsLoading(false);
       toast.error(error.response.data.message, {
         position: 'bottom-left',
         autoClose: 3000,
@@ -68,6 +77,21 @@ const UploadFiles = () => {
       console.log(error);
     }
   };
+  const handleCheckStatusUploadFile = async () => {
+    try {
+      const process = (await checkConvertFileStatus()) as {
+        statusQueue: string;
+      };
+      if (process && process.statusQueue === 'active') {
+        setIsLoading(false);
+      } else {
+        setIsLoading(true);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     if (files && chunck !== '' && overlap !== '') {
@@ -79,6 +103,7 @@ const UploadFiles = () => {
 
   useEffect(() => {
     getSettingDefaults();
+    handleCheckStatusUploadFile();
   }, []);
 
   return (
@@ -166,14 +191,22 @@ const UploadFiles = () => {
               className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             />
           </div>
-          <button
-            type="button"
-            onClick={() => handleCreateVector()}
-            disabled={!isEdit}
-            className="py-2 bg-primary disabled:bg-body disabled:bg-opacity-80 hover:bg-opacity-90 rounded-lg text-white text-sm"
-          >
-            Create to vector
-          </button>
+          <div className="flex flex-col gap-2">
+            <button
+              type="button"
+              onClick={() => handleCreateVector()}
+              disabled={!isEdit || isLoading}
+              className="py-2 bg-primary disabled:bg-body disabled:bg-opacity-80 hover:bg-opacity-90 rounded-lg text-white text-sm"
+            >
+              Create to vector
+            </button>
+            {isLoading && (
+              <p className="text-xs text-meta-1">
+                In process, You will be able to upload the file again once the
+                operation is successful.
+              </p>
+            )}
+          </div>
         </div>
       </div>
     </>

@@ -75,3 +75,7 @@ export const searchContext = (question: string) => {
 export const getSettingsModel = () => {
   return http.get('/get/setting-model-test-server', {}, true);
 };
+
+export const checkConvertFileStatus = () => {
+  return http.get('/status-queue-make-embedding', {}, true);
+};

@@ -23,11 +23,10 @@ const authHeader = async (): Promise<{ Authorization: string }> => {
   try {
     if (accessToken) {
       const tokenType = localStorage.getItem('token_type');
-      const expiredAt = new Date(
-        Date.parse(localStorage.getItem('expired_at') ?? '0'),
-      );
+      const expiredAt = Number(localStorage.getItem('expired_at') ?? 0);
       const currentTime = new Date();
-      if (currentTime.getTime() >= expiredAt.getTime()) {
+
+      if (currentTime.getTime() >= expiredAt * 1000) {
         const refreshToken = localStorage.getItem('refresh_token');
         let config = {
           method: 'get',
@@ -38,13 +37,14 @@ const authHeader = async (): Promise<{ Authorization: string }> => {
           },
         };
         const { data } = (await axios.request(config)) as any;
-        const expiredAt = moment
-          .unix(data.accessTokenExpiration)
-          .format('MMMM Do YYYY, h:mm:ss a');
         localStorage.setItem('access_token', data?.accessToken);
         localStorage.setItem('refresh_token', data?.refreshToekn);
+        localStorage.setItem('role', data.roleName);
+        localStorage.setItem(
+          'expired_at',
+          data.accessTokenExpiration.toString(),
+        );
         localStorage.setItem('token_type', 'Bearer');
-        localStorage.setItem('expired_at', expiredAt);
         return authHeader();
       }
       return { Authorization: `${tokenType} ${accessToken}` };

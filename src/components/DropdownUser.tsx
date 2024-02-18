@@ -7,12 +7,25 @@ const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
-
+  const userName = localStorage.getItem('username');
+  const role = localStorage.getItem('role');
   const handleClickLogOut = () => {
     const accessToken = localStorage.getItem('access_token');
     if (accessToken) {
       localStorage.removeItem('access_token');
       window.location.href = `/`;
+    }
+  };
+
+  const handleFormatedMessage = (text: string | null) => {
+    if (text === null) return;
+    switch (text) {
+      case 'admin-dev':
+        return 'Admin';
+      case 'admin-normal':
+        return 'Officers';
+      default:
+        return 'Unknown';
     }
   };
 
@@ -51,20 +64,24 @@ const DropdownUser = () => {
         to="#"
       >
         <span className="hidden text-right lg:block">
-          <span className="block text-sm font-medium text-black dark:text-white">
-            Thomas Anree
+          <span className="block text-sm font-medium capitalize text-black dark:text-white">
+            {userName ?? 'admin'}
           </span>
-          <span className="block text-xs">Admin</span>
+          <span className="block text-xs capitalize">
+            {handleFormatedMessage(role)}
+          </span>
         </span>
 
         <span className="h-12 w-12 rounded-full">
-          <img src={UserOne} alt="User" />
+          <img
+            src={`https://imgs.search.brave.com/RSH2MPgnMPPQdCsrXCAsD8-7SLJmwYriB7gIttwKSLg/rs:fit:860:0:0/g:ce/aHR0cHM6Ly93d3cu/cG5nYWxsLmNvbS93/cC1jb250ZW50L3Vw/bG9hZHMvMTIvQXZh/dGFyLVByb2ZpbGUt/UE5HLVBob3Rvcy5w/bmc`}
+            alt="User"
+          />
         </span>
 
+        {/* add class block for show dropdown  */}
         <svg
-          className={`hidden fill-current sm:block ${
-            dropdownOpen ? 'rotate-180' : ''
-          }`}
+          className={`hidden fill-current ${dropdownOpen ? 'rotate-180' : ''}`}
           width="12"
           height="8"
           viewBox="0 0 12 8"

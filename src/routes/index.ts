@@ -6,6 +6,7 @@ const KeypromptandModel = lazy(() => import('../components/TrainForms/KeyPromptF
 const Chuncks = lazy(() => import('../pages/Chuncks'))
 const ChatAI = lazy(() => import('../pages/ChatAI'))
 const History = lazy(() => import('../pages/History'));
+const Officers = lazy(() => import('../pages/Officers'))
 
 const coreRoutes = [
  
@@ -43,6 +44,10 @@ const coreRoutes = [
     path: '/history',
     title: 'History',
     component: History,
+  },{
+    path:'/officers/management',
+    title:'Officers Management',
+    component:Officers
   }
  
 ];

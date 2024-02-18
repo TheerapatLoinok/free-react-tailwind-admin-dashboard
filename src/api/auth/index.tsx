@@ -11,3 +11,7 @@ export const SignInAPI = async ({ userName, password }: SignInInputs) => {
     withFromData: false,
   });
 };
+
+export const GetProfile = async () => {
+  return await http.get(`/get/profile`, {}, true);
+};

@@ -6,12 +6,37 @@ import routes from './routes';
 import { ToastContainer } from 'react-toastify';
 import PageNotFound from './components/Errors/PageNotFound';
 import ChatAI from './pages/ChatAI';
+import { GetProfile } from './api/auth';
 
 const DefaultLayout = lazy(() => import('./layout/DefaultLayout'));
 
 function App() {
   const [loading, setLoading] = useState<boolean>(false);
   const accessToken = localStorage.getItem('access_token');
+
+  const handleGetuseProfile = async () => {
+    try {
+      setLoading(true);
+      const user = (await GetProfile()) as {
+        username: string;
+        roleName: string;
+      };
+      if (user) {
+        localStorage.setItem('username', user.username);
+        localStorage.setItem('role', user.roleName);
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (accessToken && accessToken !== null) {
+      handleGetuseProfile();
+    }
+  }, []);
 
   return loading ? (
     <Loader />

@@ -3,17 +3,20 @@ import { Item } from '../pages/Officers';
 
 interface TableOfficersProps {
   data: Item[];
+  activeUserId: string;
+  onAssign: (id: string) => void;
 }
 
-const TableOfficers = ({ data }: TableOfficersProps) => {
-  console.log('data', data);
+const TableOfficers = ({
+  data,
+  activeUserId,
+  onAssign,
+}: TableOfficersProps) => {
   return (
     <div className="flex flex-col">
       <div className="grid grid-cols-5 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-5 ">
         <div className="text-center p-2.5 xl:p-5">
-          <h5 className="text-sm font-medium uppercase xsm:text-base">
-            IntercomId
-          </h5>
+          <h5 className="text-sm font-medium uppercase xsm:text-base">Id</h5>
         </div>
 
         <div className="p-2.5 text-center xl:p-5">
@@ -61,7 +64,18 @@ const TableOfficers = ({ data }: TableOfficersProps) => {
               </div>
 
               <div className="flex items-center justify-center p-2.5 xl:p-5">
-                <p className="text-black dark:text-white sm:block">Actives</p>
+                {item.intercomAdminId === activeUserId ? (
+                  <p className="text-success dark:text-white sm:block">
+                    Assigned
+                  </p>
+                ) : (
+                  <button
+                    onClick={() => onAssign(item.intercomAdminId)}
+                    className="text-white bg-primary px-4 py-2 rounded-lg hover:bg-opacity-90"
+                  >
+                    Assign
+                  </button>
+                )}
               </div>
 
               <div className="flex items-start justify-center p-2.5 xl:p-5">

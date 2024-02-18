@@ -7,6 +7,7 @@ const Chuncks = lazy(() => import('../pages/Chuncks'))
 const ChatAI = lazy(() => import('../pages/ChatAI'))
 const History = lazy(() => import('../pages/History'));
 const Officers = lazy(() => import('../pages/Officers'))
+const Logs = lazy(() => import('../pages/Officers/Logs'));
 
 const coreRoutes = [
  
@@ -44,10 +45,16 @@ const coreRoutes = [
     path: '/history',
     title: 'History',
     component: History,
-  },{
+  },
+  {
     path:'/officers/management',
     title:'Officers Management',
     component:Officers
+  },
+  {
+    path:'/officers/logs',
+    title:'Officers logs',
+    component:Logs
   }
  
 ];

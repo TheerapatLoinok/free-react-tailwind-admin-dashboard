@@ -1,24 +1,23 @@
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import { IoMdCloseCircle } from 'react-icons/io';
-import { ActiveAdmin, AssignmentAdmin, GetOfficers } from '../../api/officers';
+import { GetLogs } from '../../api/officers';
 import Pagination from '../../common/Pagination';
 import Breadcrumb from '../../components/Breadcrumb';
-import TableOfficers from '../../components/TableOfficers';
+import TableLogs from '../../components/TableLogs';
 
-interface AdminsType {
+interface LogType {
   items: Item[];
   meta: Meta;
   link: Link;
 }
+
 export interface Item {
-  id: number;
-  username: string;
-  roleName: string;
+  detail: string;
   created_at: string;
   updated_at: string;
-  intercomAdminId: string;
+  adminId: number;
 }
+
 interface Meta {
   itemThisPage: number;
   totalItems: number;
@@ -27,18 +26,21 @@ interface Meta {
   itemsPerPage: number;
   filters: Filters;
 }
-interface Filters {
-  username: string;
-}
+
+interface Filters {}
+
 interface Link {
   first: string;
   previous: any;
-  next: any;
+  next: string;
   last: string;
 }
 
-const Officers = () => {
+const Logs = () => {
   const [keywords, setKeywords] = useState('');
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [logs, setLogs] = useState<Item[]>([]);
   const [meta, setMeta] = useState({
     currentPage: 1,
     itemThisPage: 10,
@@ -46,22 +48,14 @@ const Officers = () => {
     totalItems: 10,
     totalPage: 10,
   });
-  const [page, setPage] = useState(1);
-  const [admins, setAdmins] = useState<Item[]>([]);
-  const [limit, setLimit] = useState(10);
-  const [activeUserId, setActiveUserId] = useState('');
-  const handleChangeKeywords = (text: string) => {
-    setKeywords(text);
+  const handleChangeKeywords = (arg0: string) => {
+    setKeywords(arg0);
   };
-  const fetchAllAdmins = async () => {
+  const fetchLogs = async () => {
     try {
-      const data = (await GetOfficers({
-        page,
-        limit,
-        keywords,
-      })) as AdminsType;
+      const data = (await GetLogs({ page, limit, keywords })) as LogType;
       if (data) {
-        setAdmins(data.items);
+        setLogs(data.items);
         setMeta({
           currentPage: data.meta.currentPage,
           itemsPerPage: data.meta.itemsPerPage,
@@ -85,70 +79,28 @@ const Officers = () => {
       setPage(1);
     }
   };
-  const fetchActiveAdmins = async () => {
-    try {
-      const data = (await ActiveAdmin()) as { intercomAdminId: string };
-      setActiveUserId(data.intercomAdminId);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const handleAssignmentAdmin = async (id: string) => {
-    try {
-      const data = await AssignmentAdmin(id);
-      if (data) {
-        toast.success('Assignment admin success', {
-          position: 'bottom-left',
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: 'colored',
-        });
-        fetchAllAdmins();
-      }
-    } catch (error: any) {
-      console.log(error);
-      toast.error(error.response.data.message, {
-        position: 'bottom-left',
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: 'colored',
-      });
-    }
-  };
   useEffect(() => {
-    fetchAllAdmins();
-    fetchActiveAdmins();
+    fetchLogs();
   }, [page, limit, keywords]);
 
   return (
     <>
       <Breadcrumb
         mainPageName="Officers"
-        mainPagePath="/officers/managemesnt"
-        pageName="Management"
+        mainPagePath="/officers/logs"
+        pageName="Logs"
       />
       <div className="rounded-sm border flex flex-col gap-4 border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <h4 className="text-xl font-semibold text-black dark:text-white">
-          Officers management
+          Officers logs
         </h4>
-        <div className="flex flex-col gap-2 lg:flex-row lg:justify-between items-end">
-          <button className="px-4 py-2 w-full lg:w-fit h-[50px] bg-primary hover:bg-opacity-90 text-white rounded-lg">
-            Create new officers
-          </button>
+        <div className="flex justify-end">
           <div className=" w-full lg:w-[30%] flex flex-col gap-2">
             <label
               htmlFor="admins"
               className=" block text-black text-sm dark:text-white truncate"
             >
-              Search admins with name
+              Search logs with detail
             </label>
             <div className="py-3 px-5  border-[1.5px] rounded-lg border-stroke">
               <div className="relative">
@@ -181,7 +133,7 @@ const Officers = () => {
                     type="text"
                     value={keywords}
                     onChange={(e) => handleChangeKeywords(e.target.value)}
-                    placeholder="Type to search admins name"
+                    placeholder="Type to search logs"
                     className="w-full bg-transparent pr-4 pl-9 focus:outline-none"
                   />
                   {keywords.trim() !== '' && (
@@ -195,12 +147,8 @@ const Officers = () => {
           </div>
         </div>
         <hr className="text-stroke" />
-        <TableOfficers
-          data={admins}
-          activeUserId={activeUserId}
-          onAssign={handleAssignmentAdmin}
-        />
-        {admins.length > 0 && (
+        <TableLogs data={logs} />
+        {logs.length > 0 && (
           <div className="flex flex-col gap-4 lg:gap-0 lg:flex-row justify-between py-2">
             <div className="relative z-20 bg-white dark:bg-form-input">
               <select
@@ -241,5 +189,4 @@ const Officers = () => {
     </>
   );
 };
-
-export default Officers;
+export default Logs;

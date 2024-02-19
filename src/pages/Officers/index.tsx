@@ -1,10 +1,21 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { IoMdCloseCircle } from 'react-icons/io';
-import { ActiveAdmin, AssignmentAdmin, GetOfficers } from '../../api/officers';
+import {
+  ActiveAdmin,
+  AssignmentAdmin,
+  CreateOfficers,
+  GetAllAdminsIntercom,
+  GetAllRoles,
+  GetOfficers,
+} from '../../api/officers';
 import Pagination from '../../common/Pagination';
 import Breadcrumb from '../../components/Breadcrumb';
 import TableOfficers from '../../components/TableOfficers';
+import Modal from '../../common/Modal';
+import { BsFillEyeFill } from 'react-icons/bs';
+import { BsFillEyeSlashFill } from 'react-icons/bs';
+import EmailAutoComplete from '../../components/EmailAutoComplete';
 
 interface AdminsType {
   items: Item[];
@@ -37,6 +48,39 @@ interface Link {
   last: string;
 }
 
+export interface AdminListType {
+  adminsList: AdminsList;
+}
+
+export interface AdminsList {
+  type: string;
+  admins: Admin[];
+}
+
+export interface Admin {
+  type: string;
+  email: string;
+  id: string;
+  name: string;
+  away_mode_enabled: boolean;
+  away_mode_reassign: boolean;
+  has_inbox_seat: boolean;
+  team_ids: number[];
+  team_priority_level: TeamPriorityLevel;
+}
+
+export interface TeamPriorityLevel {
+  primary_team_ids?: number[];
+}
+
+export interface RolesType {
+  id: number;
+  roleName: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: any;
+}
+
 const Officers = () => {
   const [keywords, setKeywords] = useState('');
   const [meta, setMeta] = useState({
@@ -49,7 +93,20 @@ const Officers = () => {
   const [page, setPage] = useState(1);
   const [admins, setAdmins] = useState<Item[]>([]);
   const [limit, setLimit] = useState(10);
+  const [isDisableAssignment, setIsDisableAssignment] = useState(false);
   const [activeUserId, setActiveUserId] = useState('');
+  const [adminsIntercom, setAdminsIntercom] = useState<Admin[]>([]);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isShowPassword, setIsShowPassword] = useState(false);
+  const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
+  const [roles, setRoles] = useState<RolesType[]>([]);
+  const [officersRoles, setOfficersRoles] = useState(roles[0]?.id ?? 1);
+  const [userName, setUserName] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+  const [intercomId, setIntercomId] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isDisableButton, setIsDisableButton] = useState(true);
   const handleChangeKeywords = (text: string) => {
     setKeywords(text);
   };
@@ -69,6 +126,16 @@ const Officers = () => {
           totalItems: data.meta.totalItems,
           totalPage: data.meta.totalPage,
         });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const fetchAllAdminsIntercom = async () => {
+    try {
+      const data = (await GetAllAdminsIntercom()) as AdminListType;
+      if (data) {
+        setAdminsIntercom(data.adminsList.admins);
       }
     } catch (error) {
       console.log(error);
@@ -95,6 +162,7 @@ const Officers = () => {
   };
   const handleAssignmentAdmin = async (id: string) => {
     try {
+      setIsDisableAssignment(true);
       const data = await AssignmentAdmin(id);
       if (data) {
         toast.success('Assignment admin success', {
@@ -107,7 +175,98 @@ const Officers = () => {
           progress: undefined,
           theme: 'colored',
         });
+        setIsDisableAssignment(false);
+        fetchActiveAdmins();
         fetchAllAdmins();
+      }
+    } catch (error: any) {
+      console.log(error);
+      setIsDisableAssignment(false);
+      toast.error(error.response.data.message, {
+        position: 'bottom-left',
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: 'colored',
+      });
+    }
+  };
+  const handleSetShowPassword = () => {
+    setIsShowPassword(!isShowPassword);
+  };
+  const handleSetShowConfirmPassword = () => {
+    setIsShowConfirmPassword(!isShowConfirmPassword);
+  };
+  const handleCloseModal = () => {
+    setUserEmail('');
+    setOfficersRoles(1);
+    setUserEmail('');
+    setIntercomId('');
+    setPassword('');
+    setConfirmPassword('');
+    setIsDisableButton(true);
+    setIsOpenModal(false);
+  };
+  const fetchRoles = async () => {
+    try {
+      const data = (await GetAllRoles()) as RolesType[];
+      if (data) {
+        setRoles(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleFilterIntercomId = (email: string) => {
+    const filterIntercomId = adminsIntercom.filter(
+      (user) => user.email === email,
+    )[0]?.id;
+
+    if (filterIntercomId) {
+      setIntercomId(filterIntercomId);
+    } else {
+      setIntercomId('');
+    }
+  };
+  const handleCheckDisableButton = () => {
+    if (
+      officersRoles &&
+      userName.trim() !== '' &&
+      userEmail.trim() !== '' &&
+      intercomId.trim() !== '' &&
+      password.trim() !== '' &&
+      confirmPassword.trim() !== '' &&
+      password === confirmPassword
+    ) {
+      setIsDisableButton(false);
+    } else {
+      setIsDisableButton(true);
+    }
+  };
+  const onSubmitCreateNewUser = async () => {
+    try {
+      const payload = {
+        username: userName,
+        password: password,
+        intercomAdminId: intercomId,
+        roleAdminId: officersRoles,
+      };
+      const data = (await CreateOfficers(payload)) as any;
+      if (data) {
+        toast.success(data.message, {
+          position: 'bottom-left',
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: 'colored',
+        });
+        handleCloseModal();
       }
     } catch (error: any) {
       console.log(error);
@@ -127,6 +286,23 @@ const Officers = () => {
     fetchAllAdmins();
     fetchActiveAdmins();
   }, [page, limit, keywords]);
+  useEffect(() => {
+    fetchAllAdminsIntercom();
+    fetchRoles();
+  }, []);
+  useEffect(() => {
+    handleFilterIntercomId(userEmail);
+  }, [userEmail]);
+  useEffect(() => {
+    handleCheckDisableButton();
+  }, [
+    officersRoles,
+    userName,
+    userEmail,
+    intercomId,
+    password,
+    confirmPassword,
+  ]);
 
   return (
     <>
@@ -140,7 +316,10 @@ const Officers = () => {
           Officers management
         </h4>
         <div className="flex flex-col gap-2 lg:flex-row lg:justify-between items-end">
-          <button className="px-4 py-2 w-full lg:w-fit h-[50px] bg-primary hover:bg-opacity-90 text-white rounded-lg">
+          <button
+            onClick={() => setIsOpenModal(true)}
+            className="px-4 py-2 w-full lg:w-fit h-[50px] bg-primary hover:bg-opacity-90 text-white rounded-lg"
+          >
             Create new officers
           </button>
           <div className=" w-full lg:w-[30%] flex flex-col gap-2">
@@ -196,6 +375,7 @@ const Officers = () => {
         </div>
         <hr className="text-stroke" />
         <TableOfficers
+          isDisableAssignment={isDisableAssignment}
           data={admins}
           activeUserId={activeUserId}
           onAssign={handleAssignmentAdmin}
@@ -238,6 +418,129 @@ const Officers = () => {
           </div>
         )}
       </div>
+      <Modal isOpen={isOpenModal} onClose={handleCloseModal}>
+        <div className="flex flex-col gap-4  h-auto py-4 w-[calc(100vw_-_56px)] md:w-[500px]">
+          <p className="text-lg font-medium text-black">Create new officers</p>
+          <div className="flex gap-2 md:gap-4 justify-between">
+            <div className="flex flex-col gap-1 w-[45%] md:w-full">
+              <label
+                className="text-body text-sm capitalize"
+                htmlFor="username"
+              >
+                username
+              </label>
+              <input
+                id="username"
+                onChange={(e) => setUserName(e.target.value)}
+                value={userName}
+                placeholder="Enter username of officers"
+                className="border-[1px] border-body rounded-md px-4 py-2 text-sm text-black"
+                type={'text'}
+              />
+            </div>
+            <div className="flex flex-col gap-1 w-[45%] md:w-full">
+              <label className="text-body text-sm capitalize" htmlFor="email">
+                email
+              </label>
+              <EmailAutoComplete
+                inputId="email"
+                emailData={adminsIntercom}
+                onSelectEmail={(e) => setUserEmail(e)}
+              />
+            </div>
+          </div>
+          <div className="flex gap-2 md:gap-4 justify-between">
+            <div className="flex flex-col gap-1 w-[45%] md:w-full">
+              <label className="text-body text-sm capitalize" htmlFor="role">
+                role
+              </label>
+              <select
+                id="role"
+                onChange={(e) => setOfficersRoles(Number(e.target.value))}
+                value={officersRoles}
+                className="border-[1px] border-body rounded-md px-4 py-2 text-sm text-black"
+              >
+                {roles.map((role, index) => (
+                  <option key={index} value={role.id}>
+                    {role.roleName}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex flex-col gap-1 w-[45%] md:w-full">
+              <label
+                className="text-body text-sm capitalize"
+                htmlFor="intercomId"
+              >
+                intercom id
+              </label>
+              <input
+                id="intercomId"
+                placeholder="Intercom Id"
+                value={intercomId}
+                disabled
+                className="border-[1px] border-body bg-stroke rounded-md px-4 py-2 text-sm text-black"
+                type={'text'}
+              />
+            </div>
+          </div>
+          <div className="flex flex-col gap-1 relative">
+            <label className="text-body text-sm capitalize" htmlFor="password">
+              password
+            </label>
+            <input
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter password of officers"
+              className="border-[1px] border-body rounded-md pl-4 pr-8 py-2 text-sm text-black"
+              type={`${isShowPassword ? 'text' : 'password'}`}
+            />
+            <button
+              onClick={handleSetShowPassword}
+              className="absolute right-2 top-9"
+            >
+              {isShowPassword ? <BsFillEyeSlashFill /> : <BsFillEyeFill />}
+            </button>
+          </div>
+          <div className="flex flex-col gap-1 relative">
+            <label
+              className="text-body text-sm capitalize"
+              htmlFor="confirmpassword"
+            >
+              confirm Password
+            </label>
+            <input
+              id="confirmpassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Enter confirm password of officers"
+              className="border-[1px] border-body rounded-md pl-4 pr-8 py-2 text-sm text-black"
+              type={`${isShowConfirmPassword ? 'text' : 'password'}`}
+            />
+            <button
+              onClick={handleSetShowConfirmPassword}
+              className="absolute right-2 top-9"
+            >
+              {isShowConfirmPassword ? (
+                <BsFillEyeSlashFill />
+              ) : (
+                <BsFillEyeFill />
+              )}
+            </button>
+            {confirmPassword.trim() !== '' && confirmPassword !== password && (
+              <p className="text-xs text-meta-1">Passwords don't match</p>
+            )}
+          </div>
+          <button
+            disabled={isDisableButton}
+            onClick={onSubmitCreateNewUser}
+            className="px-4 py-2 bg-primary disabled:bg-bodydark text-white rounded-md hover:bg-opacity-90 "
+          >
+            Create new officers
+          </button>
+        </div>
+      </Modal>
     </>
   );
 };

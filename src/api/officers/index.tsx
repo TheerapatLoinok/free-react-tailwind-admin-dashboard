@@ -39,3 +39,23 @@ export const ActiveAdmin = () => {
 export const AssignmentAdmin = (id: string) => {
   return http.get(`/assign/adminIntercom/${id}`, {}, true);
 };
+
+export const GetAllAdminsIntercom = () => {
+  return http.get(`/get/all-admin`, {}, true);
+};
+
+export const GetAllRoles = () => {
+  return http.get('/admin/all-role', {}, true);
+};
+
+export const CreateOfficers = (payload: {
+  username: string;
+  password: string;
+  intercomAdminId: string;
+  roleAdminId: number;
+}) => {
+  return http.post(`/admin/create-admin`, payload, {
+    withAuth: true,
+    withFromData: false,
+  });
+};

@@ -4,12 +4,14 @@ import { Item } from '../pages/Officers';
 interface TableOfficersProps {
   data: Item[];
   activeUserId: string;
+  isDisableAssignment?: boolean;
   onAssign: (id: string) => void;
 }
 
 const TableOfficers = ({
   data,
   activeUserId,
+  isDisableAssignment = false,
   onAssign,
 }: TableOfficersProps) => {
   return (
@@ -70,8 +72,9 @@ const TableOfficers = ({
                   </p>
                 ) : (
                   <button
+                    disabled={isDisableAssignment}
                     onClick={() => onAssign(item.intercomAdminId)}
-                    className="text-white bg-primary px-4 py-2 rounded-lg hover:bg-opacity-90"
+                    className="text-white bg-primary disabled:bg-body px-4 py-2 rounded-lg hover:bg-opacity-90"
                   >
                     Assign
                   </button>

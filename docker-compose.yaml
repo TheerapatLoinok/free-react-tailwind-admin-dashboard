@@ -1,12 +1,14 @@
-version: '3.8'
+version: "3.4"
 services:
-  app:
+  vite_docker:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: vite_docker
     ports:
-      - '3000:3000'
+      - "8000:8000"
     volumes:
-      - .:/app
-    environment:
-      - NODE_ENV=development
+      - type: bind
+        source: ./
+        target: /srv/app
+    tty: true

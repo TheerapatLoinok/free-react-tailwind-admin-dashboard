@@ -1,24 +1,15 @@
-FROM node:20
+FROM node:18-alpine
 
-ENV PORT 3000
+WORKDIR /srv/app
 
-RUN npm i npm@latest -g
+COPY package.json .
 
-# Create app directory
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
-
-# Installing dependencies
-COPY package*.json /usr/src/app/
 RUN npm install
 
-# Copying source files
-COPY . /usr/src/app
-
-# Building app
+COPY . .
 
 RUN npm run build
-EXPOSE 3000
 
-# Running the app
-CMD "npm" "start"
+EXPOSE 8000
+
+CMD ["npm", "run", "start"]

@@ -6,9 +6,5 @@ services:
       dockerfile: Dockerfile
     container_name: vite_docker
     ports:
-      - "8000:8000"
-    volumes:
-      - type: bind
-        source: ./
-        target: /srv/app
+      - "8000:4173"
     tty: true

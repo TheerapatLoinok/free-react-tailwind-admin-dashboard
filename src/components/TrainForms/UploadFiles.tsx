@@ -15,6 +15,7 @@ const UploadFiles = () => {
   const [files, setFiles] = useState<File>();
   const [isEdit, setIsEdit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const role = localStorage.getItem('role');
   const handleUploadFile = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       setFiles(event.target.files[0]);
@@ -133,64 +134,69 @@ const UploadFiles = () => {
               className="w-full  cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent font-medium outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:py-3 file:px-5 file:hover:bg-primary file:hover:bg-opacity-10 focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-primary"
             />
           </div>
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor="chunck"
-              className="text-black text-sm flex gap-2 items-center"
-            >
-              Chunck
-              <Tooltip
-                text="Chunk is the division of text data into smaller pieces. according to the specified characteristics In order to process data efficiently and conveniently for further analysis and use."
-                className="bg-black p-2 text-white text-xs absolute z-10 rounded-lg top-0 -mt-7 w-[200px] h-auto"
-              >
-                <span>
-                  <IoHelpCircleSharp size={20} />
-                </span>
-              </Tooltip>
-            </label>
-            <input
-              id="chunck"
-              type="text"
-              value={chunck}
-              onChange={(e) => handleChangeChunck(e.target.value)}
-              onKeyPress={(event) => {
-                if (!/^\d+$/.test(event.key)) {
-                  event.preventDefault();
-                }
-              }}
-              placeholder="Enter number of chunck"
-              className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor="overlap"
-              className="flex gap-2 text-black text-sm items-center"
-            >
-              Overlap
-              <Tooltip
-                text={`The part that connects data So that the information will be more continuous and meaningful.`}
-                className="bg-black p-2 text-white text-xs absolute z-10 rounded-lg top-0 -mt-7  w-[200px] h-auto"
-              >
-                <span>
-                  <IoHelpCircleSharp size={20} />
-                </span>
-              </Tooltip>
-            </label>
-            <input
-              id="overlap"
-              type="text"
-              value={overlap}
-              onChange={(e) => handleChangeOverlap(e.target.value)}
-              onKeyPress={(event) => {
-                if (!/^\d+$/.test(event.key)) {
-                  event.preventDefault();
-                }
-              }}
-              placeholder="Enter number of overlap"
-              className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-            />
-          </div>
+          {role === 'admin-dev' && (
+            <>
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="chunck"
+                  className="text-black text-sm flex gap-2 items-center"
+                >
+                  Chunck
+                  <Tooltip
+                    text="Chunk is the division of text data into smaller pieces. according to the specified characteristics In order to process data efficiently and conveniently for further analysis and use."
+                    className="bg-black p-2 text-white text-xs absolute z-10 rounded-lg top-0 -mt-7 w-[200px] h-auto"
+                  >
+                    <span>
+                      <IoHelpCircleSharp size={20} />
+                    </span>
+                  </Tooltip>
+                </label>
+                <input
+                  id="chunck"
+                  type="text"
+                  value={chunck}
+                  onChange={(e) => handleChangeChunck(e.target.value)}
+                  onKeyPress={(event) => {
+                    if (!/^\d+$/.test(event.key)) {
+                      event.preventDefault();
+                    }
+                  }}
+                  placeholder="Enter number of chunck"
+                  className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="overlap"
+                  className="flex gap-2 text-black text-sm items-center"
+                >
+                  Overlap
+                  <Tooltip
+                    text={`The part that connects data So that the information will be more continuous and meaningful.`}
+                    className="bg-black p-2 text-white text-xs absolute z-10 rounded-lg top-0 -mt-7  w-[200px] h-auto"
+                  >
+                    <span>
+                      <IoHelpCircleSharp size={20} />
+                    </span>
+                  </Tooltip>
+                </label>
+                <input
+                  id="overlap"
+                  type="text"
+                  value={overlap}
+                  onChange={(e) => handleChangeOverlap(e.target.value)}
+                  onKeyPress={(event) => {
+                    if (!/^\d+$/.test(event.key)) {
+                      event.preventDefault();
+                    }
+                  }}
+                  placeholder="Enter number of overlap"
+                  className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                />
+              </div>
+            </>
+          )}
+
           <div className="flex flex-col gap-2">
             <button
               type="button"

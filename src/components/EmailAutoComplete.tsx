@@ -51,8 +51,10 @@ const EmailAutoComplete = ({
     <div className="relative">
       <input
         id={inputId ?? 'id'}
+        autoComplete="off"
         value={searchKeyword}
         onChange={(e) => handleChageSearch(e.target.value)}
+        onClick={() => setIsOpenDropdown(true)}
         placeholder="Enter officers intercom email"
         className="border-[1px] w-full border-body rounded-md px-4 py-2 text-sm text-black"
         type={'text'}
@@ -60,7 +62,7 @@ const EmailAutoComplete = ({
       {isOpenDropdown && (
         <div
           ref={dropdownRef}
-          className="z-20 rounded-lg py-2 bg-white border-[1px] border-bodydark absolute top-10 left-0 w-full flex flex-col gap-2"
+          className="z-20 rounded-lg py-2 max-h-[300px] overflow-y-scroll bg-white border-[1px] border-bodydark absolute top-10 left-0 w-full flex flex-col gap-2"
         >
           {options.length > 0 ? (
             <>

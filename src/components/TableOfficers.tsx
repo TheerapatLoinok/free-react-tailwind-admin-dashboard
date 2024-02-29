@@ -3,20 +3,12 @@ import { Item } from '../pages/Officers';
 
 interface TableOfficersProps {
   data: Item[];
-  activeUserId: string;
-  isDisableAssignment?: boolean;
-  onAssign: (id: string) => void;
 }
 
-const TableOfficers = ({
-  data,
-  activeUserId,
-  isDisableAssignment = false,
-  onAssign,
-}: TableOfficersProps) => {
+const TableOfficers = ({ data }: TableOfficersProps) => {
   return (
     <div className="flex flex-col">
-      <div className="grid grid-cols-5 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-5 ">
+      <div className="grid grid-cols-6 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-6 ">
         <div className="text-center p-2.5 xl:p-5">
           <h5 className="text-sm font-medium uppercase xsm:text-base">Id</h5>
         </div>
@@ -34,6 +26,11 @@ const TableOfficers = ({
             Status
           </h5>
         </div>
+        <div className="p-2.5 text-center xl:p-5">
+          <h5 className="text-sm font-medium uppercase xsm:text-base">
+            Country
+          </h5>
+        </div>
         <div className=" p-2.5 text-center xl:p-5">
           <h5 className="text-sm font-medium uppercase xsm:text-base">
             Created At
@@ -45,7 +42,7 @@ const TableOfficers = ({
           {data.map((item, index) => (
             <div
               key={index}
-              className="grid grid-cols-5 border-b border-stroke dark:border-strokedark sm:grid-cols-5"
+              className="grid grid-cols-6 border-b border-stroke dark:border-strokedark sm:grid-cols-6"
             >
               <div className="flex items-center justify-center p-2.5 xl:p-5">
                 <p className="text-black dark:text-white sm:block">
@@ -60,25 +57,27 @@ const TableOfficers = ({
               </div>
 
               <div className="flex items-center justify-center p-2.5 xl:p-5">
-                <p className="text-black dark:text-white sm:block">
-                  {item.roleName}
+                <p className="text-black dark:text-white sm:block capitalize">
+                  {item.roleName === 'admin-dev' ? 'admin' : 'officers'}
                 </p>
               </div>
 
               <div className="flex items-center justify-center p-2.5 xl:p-5">
-                {item.intercomAdminId === activeUserId ? (
+                {item.active ? (
                   <p className="text-success dark:text-white sm:block">
-                    Assigned
+                    Active
                   </p>
                 ) : (
-                  <button
-                    disabled={isDisableAssignment}
-                    onClick={() => onAssign(item.intercomAdminId)}
-                    className="text-white bg-primary disabled:bg-body px-4 py-2 rounded-lg hover:bg-opacity-90"
-                  >
-                    Assign
-                  </button>
+                  <p className="text-meta-1 dark:text-white sm:block">
+                    Offline
+                  </p>
                 )}
+              </div>
+
+              <div className="flex items-center justify-center p-2.5 xl:p-5">
+                <p className="text-black capitalize dark:text-white sm:block">
+                  {item.countryAssign ?? 'Thailand'}
+                </p>
               </div>
 
               <div className="flex items-start justify-center p-2.5 xl:p-5">

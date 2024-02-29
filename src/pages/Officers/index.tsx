@@ -29,6 +29,8 @@ export interface Item {
   created_at: string;
   updated_at: string;
   intercomAdminId: string;
+  countryAssign: string;
+  active: boolean;
 }
 interface Meta {
   itemThisPage: number;
@@ -93,8 +95,6 @@ const Officers = () => {
   const [page, setPage] = useState(1);
   const [admins, setAdmins] = useState<Item[]>([]);
   const [limit, setLimit] = useState(10);
-  const [isDisableAssignment, setIsDisableAssignment] = useState(false);
-  const [activeUserId, setActiveUserId] = useState('');
   const [adminsIntercom, setAdminsIntercom] = useState<Admin[]>([]);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -106,6 +106,7 @@ const Officers = () => {
   const [intercomId, setIntercomId] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const role = localStorage.getItem('role');
   const [isDisableButton, setIsDisableButton] = useState(true);
   const handleChangeKeywords = (text: string) => {
     setKeywords(text);
@@ -150,48 +151,6 @@ const Officers = () => {
     if (arg0 !== limit) {
       setLimit(arg0);
       setPage(1);
-    }
-  };
-  const fetchActiveAdmins = async () => {
-    try {
-      const data = (await ActiveAdmin()) as { intercomAdminId: string };
-      setActiveUserId(data.intercomAdminId);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const handleAssignmentAdmin = async (id: string) => {
-    try {
-      setIsDisableAssignment(true);
-      const data = await AssignmentAdmin(id);
-      if (data) {
-        toast.success('Assignment admin success', {
-          position: 'bottom-left',
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: 'colored',
-        });
-        setIsDisableAssignment(false);
-        fetchActiveAdmins();
-        fetchAllAdmins();
-      }
-    } catch (error: any) {
-      console.log(error);
-      setIsDisableAssignment(false);
-      toast.error(error.response.data.message, {
-        position: 'bottom-left',
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: 'colored',
-      });
     }
   };
   const handleSetShowPassword = () => {
@@ -282,9 +241,13 @@ const Officers = () => {
       });
     }
   };
+  const handleOpenModal = () => {
+    if (role === 'admin-dev') {
+      setIsOpenModal(true);
+    }
+  };
   useEffect(() => {
     fetchAllAdmins();
-    fetchActiveAdmins();
   }, [page, limit, keywords]);
   useEffect(() => {
     fetchAllAdminsIntercom();
@@ -317,8 +280,9 @@ const Officers = () => {
         </h4>
         <div className="flex flex-col gap-2 lg:flex-row lg:justify-between items-end">
           <button
-            onClick={() => setIsOpenModal(true)}
-            className="px-4 py-2 w-full lg:w-fit h-[50px] bg-primary hover:bg-opacity-90 text-white rounded-lg"
+            onClick={handleOpenModal}
+            disabled={role !== 'admin-dev'}
+            className={`${role === 'admin-dev' ? 'visible' : 'invisible'} px-4 py-2 w-full lg:w-fit h-[50px] disabled:bg-stroke bg-primary hover:bg-opacity-90 text-white rounded-lg`}
           >
             Create new officers
           </button>
@@ -374,12 +338,7 @@ const Officers = () => {
           </div>
         </div>
         <hr className="text-stroke" />
-        <TableOfficers
-          isDisableAssignment={isDisableAssignment}
-          data={admins}
-          activeUserId={activeUserId}
-          onAssign={handleAssignmentAdmin}
-        />
+        <TableOfficers data={admins} />
         {admins.length > 0 && (
           <div className="flex flex-col gap-4 lg:gap-0 lg:flex-row justify-between py-2">
             <div className="relative z-20 bg-white dark:bg-form-input">
@@ -462,7 +421,7 @@ const Officers = () => {
               >
                 {roles.map((role, index) => (
                   <option key={index} value={role.id}>
-                    {role.roleName}
+                    {role.roleName === 'admin-dev' ? 'admin' : 'officers'}
                   </option>
                 ))}
               </select>

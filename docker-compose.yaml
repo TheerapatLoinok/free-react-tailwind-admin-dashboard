@@ -6,5 +6,5 @@ services:
       dockerfile: Dockerfile
     container_name: vite_docker
     ports:
-      - "8000:4173"
+      - "9000:4173"
     tty: true

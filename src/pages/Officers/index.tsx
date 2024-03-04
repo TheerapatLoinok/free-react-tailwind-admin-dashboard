@@ -7,6 +7,7 @@ import {
   CreateOfficers,
   GetAllAdminsIntercom,
   GetAllRoles,
+  GetCountry,
   GetOfficers,
 } from '../../api/officers';
 import Pagination from '../../common/Pagination';
@@ -101,6 +102,7 @@ const Officers = () => {
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
   const [roles, setRoles] = useState<RolesType[]>([]);
   const [officersRoles, setOfficersRoles] = useState(roles[0]?.id ?? 1);
+  const [country, setCountry] = useState('Thai');
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const [intercomId, setIntercomId] = useState('');
@@ -108,6 +110,7 @@ const Officers = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const role = localStorage.getItem('role');
   const [isDisableButton, setIsDisableButton] = useState(true);
+  const [countryList, setCountryList] = useState<string[]>([]);
   const handleChangeKeywords = (text: string) => {
     setKeywords(text);
   };
@@ -179,6 +182,16 @@ const Officers = () => {
       console.log(error);
     }
   };
+  const fetchCountry = async () => {
+    try {
+      const data = (await GetCountry()) as {
+        contryProvide: string[];
+      };
+      setCountryList(data?.contryProvide);
+    } catch (error) {
+      console.log('error :>> ', error);
+    }
+  };
   const handleFilterIntercomId = (email: string) => {
     const filterIntercomId = adminsIntercom.filter(
       (user) => user.email === email,
@@ -197,6 +210,7 @@ const Officers = () => {
       userEmail.trim() !== '' &&
       intercomId.trim() !== '' &&
       password.trim() !== '' &&
+      country.trim() !== '' &&
       confirmPassword.trim() !== '' &&
       password === confirmPassword
     ) {
@@ -212,6 +226,7 @@ const Officers = () => {
         password: password,
         intercomAdminId: intercomId,
         roleAdminId: officersRoles,
+        countryAssign: country,
       };
       const data = (await CreateOfficers(payload)) as any;
       if (data) {
@@ -225,6 +240,7 @@ const Officers = () => {
           progress: undefined,
           theme: 'colored',
         });
+        setPage(1);
         handleCloseModal();
       }
     } catch (error: any) {
@@ -252,6 +268,7 @@ const Officers = () => {
   useEffect(() => {
     fetchAllAdminsIntercom();
     fetchRoles();
+    fetchCountry();
   }, []);
   useEffect(() => {
     handleFilterIntercomId(userEmail);
@@ -261,6 +278,7 @@ const Officers = () => {
   }, [
     officersRoles,
     userName,
+    country,
     userEmail,
     intercomId,
     password,
@@ -442,6 +460,23 @@ const Officers = () => {
                 type={'text'}
               />
             </div>
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-body text-sm capitalize" htmlFor="country">
+              Country
+            </label>
+            <select
+              id="country"
+              onChange={(e) => setCountry(e.target.value)}
+              value={country}
+              className="border-[1px] border-body rounded-md px-4 py-2 text-sm text-black"
+            >
+              {countryList.map((c, index) => (
+                <option key={index} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="flex flex-col gap-1 relative">
             <label className="text-body text-sm capitalize" htmlFor="password">

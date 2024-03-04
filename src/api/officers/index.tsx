@@ -53,9 +53,14 @@ export const CreateOfficers = (payload: {
   password: string;
   intercomAdminId: string;
   roleAdminId: number;
+  countryAssign: string;
 }) => {
   return http.post(`/admin/create-admin`, payload, {
     withAuth: true,
     withFromData: false,
   });
+};
+
+export const GetCountry = () => {
+  return http.get(`/admin/country-list`);
 };

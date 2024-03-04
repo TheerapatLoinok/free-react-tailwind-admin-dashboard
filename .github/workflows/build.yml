@@ -21,8 +21,8 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          docker build -t estpumipat/chatBotAdmin:latest .
-          docker push estpumipat/chatBotAdmin:latest
+          docker build -t estpumipat/vite_docker:latest .
+          docker push estpumipat/vite_docker:latest
         env:
           DOCKER_USERNAME: estpumipat.0@gmail.com
           DOCKER_PASSWORD: 0981075234Est

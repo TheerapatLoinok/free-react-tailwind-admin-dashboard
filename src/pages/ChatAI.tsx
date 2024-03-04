@@ -25,7 +25,7 @@ const ChatAI = () => {
     const date = moment(new Date()).unix();
     setUid(date.toString());
     const socket = new WebSocket(
-      `wss://app.boostviewpro.com/message-stream?sender=${date.toString()}`,
+      `ws://167.172.88.19:3000/message-stream?sender=${date.toString()}`,
     );
     socket.onopen = () => {
       console.log('WebSocket connection established.');

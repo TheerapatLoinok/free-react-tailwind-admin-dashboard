@@ -64,3 +64,14 @@ export const CreateOfficers = (payload: {
 export const GetCountry = () => {
   return http.get(`/admin/country-list`);
 };
+
+export const ChangeRole = (payload: { adminId: number; roleId: number }) => {
+  return http.post(`/admin/change-role`, payload, {
+    withAuth: true,
+    withFromData: false,
+  });
+};
+
+export const DeleteOfficers = (id: number) => {
+  return http.del(`/admin/delete/${id}`, true);
+};

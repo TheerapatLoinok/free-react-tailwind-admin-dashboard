@@ -5,8 +5,8 @@ import Loader from './common/Loader';
 import routes from './routes';
 import { ToastContainer } from 'react-toastify';
 import PageNotFound from './components/Errors/PageNotFound';
-import ChatAI from './pages/ChatAI';
 import { GetProfile } from './api/auth';
+import Dashboard from './pages/Dashboard';
 
 const DefaultLayout = lazy(() => import('./layout/DefaultLayout'));
 
@@ -51,7 +51,7 @@ function App() {
       ) : (
         <Routes>
           <Route element={<DefaultLayout />}>
-            <Route index element={<ChatAI />} />
+            <Route index element={<Dashboard />} />
             {routes.map((routes, index) => {
               const { path, component: Component } = routes;
               return (

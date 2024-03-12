@@ -25,7 +25,6 @@ const authHeader = async (): Promise<{ Authorization: string }> => {
       const tokenType = localStorage.getItem('token_type');
       const expiredAt = Number(localStorage.getItem('expired_at') ?? 0);
       const currentTime = new Date();
-
       if (currentTime.getTime() >= expiredAt * 1000) {
         const refreshToken = localStorage.getItem('refresh_token');
         let config = {

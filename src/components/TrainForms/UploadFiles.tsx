@@ -93,6 +93,19 @@ const UploadFiles = () => {
       console.log(error);
     }
   };
+  const handleDownloadFile = () => {
+    try {
+      const anchor = document.createElement('a');
+      anchor.style.display = 'none';
+      anchor.href = `/informationIUX.txt`;
+      anchor.download = 'example-files.txt';
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     if (files && chunck !== '' && overlap !== '') {
@@ -124,6 +137,15 @@ const UploadFiles = () => {
               Attach file{' '}
               <span className="text-xs ">
                 ( Only text files are supported. )
+              </span>
+              <span>
+                {' '}
+                <button
+                  onClick={handleDownloadFile}
+                  className="font-medium text-sm underline text-primary"
+                >
+                  Example files
+                </button>
               </span>
             </label>
             <input
@@ -196,23 +218,26 @@ const UploadFiles = () => {
               </div>
             </>
           )}
-
-          <div className="flex flex-col gap-2">
-            <button
-              type="button"
-              onClick={() => handleCreateVector()}
-              disabled={!isEdit || isLoading}
-              className="py-2 bg-primary disabled:bg-body disabled:bg-opacity-80 hover:bg-opacity-90 rounded-lg text-white text-sm"
-            >
-              Create to vector
-            </button>
-            {isLoading && (
-              <p className="text-xs text-meta-1">
+          {isLoading ? (
+            <div className="flex flex-col gap-4 items-center py-4">
+              <div className="h-10 w-10 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
+              <p className="text-sm font-medium text-black">
                 In process, You will be able to upload the file again once the
                 operation is successful.
               </p>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2">
+              <button
+                type="button"
+                onClick={() => handleCreateVector()}
+                disabled={!isEdit || isLoading}
+                className="py-2 bg-primary disabled:bg-body disabled:bg-opacity-80 hover:bg-opacity-90 rounded-lg text-white text-sm"
+              >
+                Create to vector
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </>

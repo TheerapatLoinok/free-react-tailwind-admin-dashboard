@@ -21,10 +21,19 @@ const Dashboard = () => {
       console.log(error);
     }
   };
+  const calculatePercentage = (total: number, value: number) => {
+    if (total !== 0) {
+      return (value / total) * 100;
+    } else {
+      return 0;
+    }
+  };
 
   useEffect(() => {
     getStatistics();
   }, []);
+
+  console.log('statistics', statistics);
   return (
     <div className="flex flex-col gap-10">
       {statistics && (
@@ -32,15 +41,26 @@ const Dashboard = () => {
           <StatisticCards
             title="Total chat"
             value={statistics.total}
+            isShowPercentage={false}
             icon={<IoIosChatbubbles size={24} color={'#3C50E0'} />}
           />
           <StatisticCards
             title="Contact admin"
             value={statistics.AdminReply}
+            isShowPercentage={true}
+            percentage={calculatePercentage(
+              statistics?.total,
+              statistics?.AdminReply,
+            ).toFixed(2)}
             icon={<MdOutlineSupportAgent size={24} color={'#3C50E0'} />}
           />
           <StatisticCards
             title="Didn't contact admin"
+            isShowPercentage={true}
+            percentage={calculatePercentage(
+              statistics?.total,
+              statistics?.AdminNotReply,
+            ).toFixed(2)}
             value={statistics.AdminNotReply}
             icon={<FaRobot size={24} color={'#3C50E0'} />}
           />

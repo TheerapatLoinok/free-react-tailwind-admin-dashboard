@@ -33,7 +33,6 @@ const Dashboard = () => {
     getStatistics();
   }, []);
 
-  console.log('statistics', statistics);
   return (
     <div className="flex flex-col gap-10">
       {statistics && (

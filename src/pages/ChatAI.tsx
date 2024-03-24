@@ -44,6 +44,9 @@ const ChatAI = () => {
       if (event.data !== 'start message' && event.data !== 'end message') {
         setAnswer((prev) => prev + event.data);
       }
+      if (event.data === 'end message') {
+        setAnswer((prev) => prev + '\n\n');
+      }
     };
     socket.onclose = () => {
       console.log('WebSocket connection closed.');

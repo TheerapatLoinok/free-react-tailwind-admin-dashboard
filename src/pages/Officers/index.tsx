@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { IoMdCloseCircle } from 'react-icons/io';
 import {
-  ActiveAdmin,
-  AssignmentAdmin,
   CreateOfficers,
   GetAllAdminsIntercom,
   GetAllRoles,
@@ -17,7 +15,6 @@ import Modal from '../../common/Modal';
 import { BsFillEyeFill } from 'react-icons/bs';
 import { BsFillEyeSlashFill } from 'react-icons/bs';
 import EmailAutoComplete from '../../components/EmailAutoComplete';
-import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 interface AdminsType {
   items: Item[];

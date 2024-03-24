@@ -110,7 +110,6 @@ const History = () => {
       setPage(1);
     }
   };
-
   useEffect(() => {
     fetchHistory();
   }, [page, limit, startDate, endDate, conversationId]);
@@ -124,7 +123,7 @@ const History = () => {
       />
       <div className="rounded-sm border flex flex-col gap-4 border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <h4 className="mb-6 text-xl font-semibold text-black dark:text-white">
-          Record the history of questions and answers Between users and AI
+          Record the history of questions and answers between users and AI
         </h4>
         <div className="flex flex-col gap-2 lg:flex-row lg:justify-between">
           <div className="flex flex-col lg:flex-row gap-2 items-center">

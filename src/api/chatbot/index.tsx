@@ -66,7 +66,7 @@ export const searchContext = (question: string) => {
   const boddy = {
     question: question,
   };
-  return http.post('/test/search-context-v2', boddy, {
+  return http.post('/test/search-context', boddy, {
     withAuth: true,
     withFromData: false,
   });

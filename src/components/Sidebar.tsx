@@ -132,20 +132,20 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   }`}
                 >
                   <IoChatbubblesOutline size={18} />
-                  Chat AI
+                  Test chat AI
                 </NavLink>
               </li>
               {role === 'admin-dev' && (
                 <li>
                   <NavLink
-                    to="/test-chuncks"
+                    to="/test-chunks"
                     className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                       pathname.includes('test-chuncks') &&
                       'bg-graydark dark:bg-meta-4'
                     }`}
                   >
                     <BsStackOverflow size={18} />
-                    Test chunck
+                    Test chunk
                   </NavLink>
                 </li>
               )}
@@ -158,7 +158,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   }`}
                 >
                   <FaHistory size={18} className="fill-current" />
-                  History
+                  Chat history
                 </NavLink>
               </li>
               <li>
@@ -248,13 +248,13 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               <>
                                 <li>
                                   <NavLink
-                                    to="/settings/chuncks"
+                                    to="/settings/chunks"
                                     className={({ isActive }) =>
                                       'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
                                       (isActive && '!text-white')
                                     }
                                   >
-                                    Chunck
+                                    Chunk response
                                   </NavLink>
                                 </li>
                                 <li>

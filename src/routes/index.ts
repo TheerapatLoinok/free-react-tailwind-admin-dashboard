@@ -28,8 +28,8 @@ const coreRoutes = [
     component: ChatAI,
   },
   {
-    path: '/test-chuncks',
-    title: 'Test Chuncks',
+    path: '/test-chunks',
+    title: 'Test Chunks',
     component: Chuncks,
   },
   {
@@ -38,7 +38,7 @@ const coreRoutes = [
     component: UploadFiles,
   },
   {
-    path: '/settings/chuncks',
+    path: '/settings/chunks',
     title: 'Chuncks',
     component: NumberofChuncks,
   },

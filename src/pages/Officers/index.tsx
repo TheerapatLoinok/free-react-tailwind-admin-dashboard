@@ -105,7 +105,6 @@ const Officers = () => {
   const [roles, setRoles] = useState<RolesType[]>([]);
   const [officersRoles, setOfficersRoles] = useState(roles[0]?.id ?? 1);
   const [country, setCountry] = useState('Thai');
-  const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const [intercomId, setIntercomId] = useState('');
   const [password, setPassword] = useState('');
@@ -211,7 +210,6 @@ const Officers = () => {
   const handleCheckDisableButton = () => {
     if (
       officersRoles &&
-      userName.trim() !== '' &&
       userEmail.trim() !== '' &&
       intercomId.trim() !== '' &&
       password.trim() !== '' &&
@@ -227,7 +225,7 @@ const Officers = () => {
   const onSubmitCreateNewUser = async () => {
     try {
       const payload = {
-        username: userName,
+        username: userEmail,
         password: password,
         intercomAdminId: intercomId,
         roleAdminId: officersRoles,
@@ -283,7 +281,6 @@ const Officers = () => {
     handleCheckDisableButton();
   }, [
     officersRoles,
-    userName,
     country,
     userEmail,
     intercomId,
@@ -417,33 +414,15 @@ const Officers = () => {
       <Modal isOpen={isOpenModal} onClose={handleCloseModal}>
         <div className="flex flex-col gap-4  h-auto py-4 w-[calc(100vw_-_56px)] md:w-[500px]">
           <p className="text-lg font-medium text-black">Create new officers</p>
-          <div className="flex gap-2 md:gap-4 justify-between">
-            <div className="flex flex-col gap-1 w-[45%] md:w-full">
-              <label
-                className="text-body text-sm capitalize"
-                htmlFor="username"
-              >
-                username
-              </label>
-              <input
-                id="username"
-                onChange={(e) => setUserName(e.target.value)}
-                value={userName}
-                placeholder="Enter username of officers"
-                className="border-[1px] border-body rounded-md px-4 py-2 text-sm text-black"
-                type={'text'}
-              />
-            </div>
-            <div className="flex flex-col gap-1 w-[45%] md:w-full">
-              <label className="text-body text-sm capitalize" htmlFor="email">
-                email
-              </label>
-              <EmailAutoComplete
-                inputId="email"
-                emailData={adminsIntercom}
-                onSelectEmail={(e) => setUserEmail(e)}
-              />
-            </div>
+          <div className="flex flex-col gap-1 w-full ">
+            <label className="text-body text-sm capitalize" htmlFor="email">
+              email
+            </label>
+            <EmailAutoComplete
+              inputId="email"
+              emailData={adminsIntercom}
+              onSelectEmail={(e) => setUserEmail(e)}
+            />
           </div>
           <div className="flex gap-2 md:gap-4 justify-between">
             <div className="flex flex-col gap-1 w-[45%] md:w-full">

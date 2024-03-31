@@ -43,7 +43,7 @@ const SignIn = () => {
             user.accessTokenExpiration.toString(),
           );
           localStorage.setItem('role', user.roleName);
-          window.location.href = `/`;
+          window.location.href = `/admin`;
         }
       }
     } catch (error: any) {

@@ -15,7 +15,7 @@ const PageNotFound = () => {
           </p>
         </div>
         <button
-          onClick={() => (window.location.href = '/')}
+          onClick={() => (window.location.href = '/admin')}
           className="flex gap-2 items-center justify-end text-sm  text-primary"
         >
           Go to home page

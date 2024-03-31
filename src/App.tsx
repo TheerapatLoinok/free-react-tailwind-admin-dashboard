@@ -51,7 +51,7 @@ function App() {
       ) : (
         <Routes>
           <Route element={<DefaultLayout />}>
-            <Route index element={<Dashboard />} />
+            <Route path="/admin" element={<Dashboard />} />
             {routes.map((routes, index) => {
               const { path, component: Component } = routes;
               return (

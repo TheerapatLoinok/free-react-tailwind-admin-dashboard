@@ -59,7 +59,7 @@ const handleError = (err: any) => {
   localStorage.removeItem('refresh_token');
   localStorage.removeItem('extension');
   localStorage.removeItem('user');
-  window.location.href = '/';
+  window.location.href = '/admin';
   throw err;
 };
 

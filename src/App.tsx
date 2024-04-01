@@ -45,7 +45,7 @@ function App() {
       <ToastContainer />
       {accessToken === null ? (
         <Routes>
-          <Route index element={<SignIn />} />
+          <Route path="/admin" element={<SignIn />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       ) : (

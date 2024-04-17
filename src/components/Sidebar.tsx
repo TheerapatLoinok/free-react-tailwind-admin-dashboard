@@ -114,9 +114,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Train bot --> */}
               <li>
                 <NavLink
-                  to="/dashboard"
+                  to="/admin/dashboard"
                   className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes('dashboard') &&
+                    pathname.includes('/admin/dashboard') &&
                     'bg-graydark dark:bg-meta-4'
                   }`}
                 >
@@ -126,7 +126,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               </li>
               <li>
                 <NavLink
-                  to="/chat-ai"
+                  to="/admin/chat-ai"
                   className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                     pathname.includes('chat-ai') && 'bg-graydark dark:bg-meta-4'
                   }`}
@@ -138,9 +138,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {role === 'admin-dev' && (
                 <li>
                   <NavLink
-                    to="/test-chunks"
+                    to="/admin/test-chunks"
                     className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                      pathname.includes('test-chuncks') &&
+                      pathname.includes('/admin/test-chunks') &&
                       'bg-graydark dark:bg-meta-4'
                     }`}
                   >
@@ -151,9 +151,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               )}
               <li>
                 <NavLink
-                  to="/history"
+                  to="/admin/history"
                   className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes('/history') &&
+                    pathname.includes('/admin/history') &&
                     'bg-graydark dark:bg-meta-4'
                   }`}
                 >
@@ -171,8 +171,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         <NavLink
                           to="#"
                           className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                            (pathname === '/settings' ||
-                              pathname.includes('settings')) &&
+                            (pathname === '/admin/settings' ||
+                              pathname.includes('/admin/settings')) &&
                             'bg-graydark dark:bg-meta-4'
                           }`}
                           onClick={(e) => {
@@ -235,7 +235,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           <ul className="mt-4 mb-5.5 flex flex-col gap-2.5 pl-6">
                             <li>
                               <NavLink
-                                to="/settings/uploadfiles"
+                                to="/admin/settings/uploadfiles"
                                 className={({ isActive }) =>
                                   'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
                                   (isActive && '!text-white')
@@ -248,7 +248,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               <>
                                 <li>
                                   <NavLink
-                                    to="/settings/chunks"
+                                    to="/admin/settings/chunks"
                                     className={({ isActive }) =>
                                       'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
                                       (isActive && '!text-white')
@@ -259,7 +259,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                 </li>
                                 <li>
                                   <NavLink
-                                    to="/settings/keyprompt-and-model"
+                                    to="/admin/settings/keyprompt-and-model"
                                     className={({ isActive }) =>
                                       'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
                                       (isActive && '!text-white')
@@ -280,7 +280,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               </li>
               <li>
                 <SidebarLinkGroup
-                  activeCondition={pathname.includes('officers')}
+                  activeCondition={pathname.includes('/admin/officers')}
                 >
                   {(handleClick, open) => {
                     return (
@@ -288,8 +288,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         <NavLink
                           to="#"
                           className={`group capitalize relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                            (pathname === '/officers' ||
-                              pathname.includes('officers')) &&
+                            (pathname === '/admin/officers' ||
+                              pathname.includes('/admin/officers')) &&
                             'bg-graydark dark:bg-meta-4'
                           }`}
                           onClick={(e) => {
@@ -328,7 +328,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           <ul className="mt-4 mb-5.5 flex flex-col gap-2.5 pl-6">
                             <li>
                               <NavLink
-                                to="/officers/management"
+                                to="/admin/officers/management"
                                 className={({ isActive }) =>
                                   'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
                                   (isActive && '!text-white')
@@ -339,7 +339,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             </li>
                             <li>
                               <NavLink
-                                to="/officers/logs"
+                                to="/admin/officers/logs"
                                 className={({ isActive }) =>
                                   'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
                                   (isActive && '!text-white')

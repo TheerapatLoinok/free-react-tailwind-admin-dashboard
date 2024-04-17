@@ -12,53 +12,53 @@ const Dashboard = lazy(() => import('../pages/Dashboard'))
 
 const coreRoutes = [
   {
-    path:'/dashboard',
+    path:'/admin/dashboard',
     title:"Dashboard",
     component:Dashboard
   },
  
   {
-    path: '/profile',
+    path: '/admin/profile',
     title: 'Profile',
     component: Profile,
   },
   {
-    path: '/chat-ai',
+    path: '/admin/chat-ai',
     title: 'Chat AI',
     component: ChatAI,
   },
   {
-    path: '/test-chunks',
+    path: '/admin/test-chunks',
     title: 'Test Chunks',
     component: Chuncks,
   },
   {
-    path: '/settings/uploadfiles',
+    path: '/admin/settings/uploadfiles',
     title: 'Upload files',
     component: UploadFiles,
   },
   {
-    path: '/settings/chunks',
+    path: '/admin/settings/chunks',
     title: 'Chuncks',
     component: NumberofChuncks,
   },
   {
-    path: '/settings/keyprompt-and-model',
+    path: '/admin/settings/keyprompt-and-model',
     title: 'Keyprompt and Model',
     component: KeypromptandModel,
   },
   {
-    path: '/history',
+    path: '/admin/history',
     title: 'History',
     component: History,
   },
   {
-    path:'/officers/management',
+    path:'/admin/officers/management',
     title:'Officers Management',
     component:Officers
   },
   {
-    path:'/officers/logs',
+    path:'/admin/officers/logs',
     title:'Officers logs',
     component:Logs
   }

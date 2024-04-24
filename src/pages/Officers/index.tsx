@@ -16,6 +16,7 @@ import { BsFillEyeFill } from 'react-icons/bs';
 import { BsFillEyeSlashFill } from 'react-icons/bs';
 import EmailAutoComplete from '../../components/EmailAutoComplete';
 import Loader from '../../common/Loader';
+import Select from 'react-select';
 
 interface AdminsType {
   items: Item[];
@@ -49,16 +50,13 @@ interface Link {
   next: any;
   last: string;
 }
-
 export interface AdminListType {
   adminsList: AdminsList;
 }
-
 export interface AdminsList {
   type: string;
   admins: Admin[];
 }
-
 export interface Admin {
   type: string;
   email: string;
@@ -70,17 +68,19 @@ export interface Admin {
   team_ids: number[];
   team_priority_level: TeamPriorityLevel;
 }
-
 export interface TeamPriorityLevel {
   primary_team_ids?: number[];
 }
-
 export interface RolesType {
   id: number;
   roleName: string;
   created_at: string;
   updated_at: string;
   deleted_at: any;
+}
+interface OptionsType {
+  label: string;
+  value: string;
 }
 
 const Officers = () => {
@@ -101,8 +101,8 @@ const Officers = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
   const [roles, setRoles] = useState<RolesType[]>([]);
-  const [officersRoles, setOfficersRoles] = useState(roles[0]?.id ?? 1);
-  const [country, setCountry] = useState('Thai');
+  const [officersRoles, setOfficersRoles] = useState<any>(null);
+  const [country, setCountry] = useState<any>(null);
   const [userEmail, setUserEmail] = useState('');
   const [intercomId, setIntercomId] = useState('');
   const [password, setPassword] = useState('');
@@ -110,6 +110,39 @@ const Officers = () => {
   const role = localStorage.getItem('role');
   const [isDisableButton, setIsDisableButton] = useState(true);
   const [countryList, setCountryList] = useState<string[]>([]);
+  const [optionsRole, setOptionsRole] = useState<OptionsType[]>([]);
+  const [optionsCountry, setOptionsCountry] = useState<OptionsType[]>([]);
+  const styleSelection = {
+    option: (styles: any, { isFocused, isSelected, isDisabled }: any) => ({
+      ...styles,
+      background: isFocused ? '#fff' : isSelected ? '#FFF' : '#fff',
+      zIndex: 1,
+      fontSize: '14px',
+      fontWeight: '400',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+      color: isDisabled ? '#231F20' : isSelected ? '#3C50E0' : '#858693',
+      cursor: 'pointer',
+      '&:hover': {
+        color: '#231F20',
+      },
+    }),
+
+    control: (base: any) => ({
+      ...base,
+      '&:hover': {
+        border: '1px solid #64748B',
+        color: '#231F20',
+      },
+      height: 'auto',
+      fontSize: '14px',
+      fontWeight: '400',
+      border: '1px solid #64748B',
+      borderRadius: '8px',
+    }),
+  };
+
   const handleChangeKeywords = (text: string) => {
     setKeywords(text);
   };
@@ -166,18 +199,25 @@ const Officers = () => {
   };
   const handleCloseModal = () => {
     setUserEmail('');
-    setOfficersRoles(1);
+    setOfficersRoles(null);
+    setCountry(null);
     setUserEmail('');
     setIntercomId('');
     setPassword('');
     setConfirmPassword('');
     setIsDisableButton(true);
     setIsOpenModal(false);
+    setIsShowConfirmPassword(false);
+    setIsShowPassword(false);
   };
   const fetchRoles = async () => {
     try {
       const data = (await GetAllRoles()) as RolesType[];
       if (data) {
+        const prepareData = data.map((role) => {
+          return { label: role.roleName, value: role.roleName };
+        });
+        setOptionsRole(prepareData);
         setRoles(data);
       }
     } catch (error) {
@@ -190,6 +230,11 @@ const Officers = () => {
         contryProvide: string[];
       };
       setCountryList(data?.contryProvide);
+      setOptionsCountry(
+        data?.contryProvide.map((country: string) => {
+          return { label: country, value: country };
+        }),
+      );
     } catch (error) {
       console.log('error :>> ', error);
     }
@@ -207,11 +252,11 @@ const Officers = () => {
   };
   const handleCheckDisableButton = () => {
     if (
-      officersRoles &&
+      officersRoles !== null &&
       userEmail.trim() !== '' &&
       intercomId.trim() !== '' &&
       password.trim() !== '' &&
-      country.trim() !== '' &&
+      country !== null &&
       confirmPassword.trim() !== '' &&
       password === confirmPassword
     ) {
@@ -226,25 +271,27 @@ const Officers = () => {
         username: userEmail,
         password: password,
         intercomAdminId: intercomId,
-        roleAdminId: officersRoles,
+        roleAdminId: officersRoles?.value,
         countryAssign: country,
       };
-      const data = (await CreateOfficers(payload)) as any;
-      if (data) {
-        toast.success(data.message, {
-          position: 'bottom-left',
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: 'colored',
-        });
-        setPage(1);
-        handleCloseModal();
-        fetchAllAdmins();
-      }
+      // const data = (await CreateOfficers(payload)) as any;
+      // if (data) {
+      //   toast.success(data.message, {
+      //     position: 'bottom-left',
+      //     autoClose: 3000,
+      //     hideProgressBar: true,
+      //     closeOnClick: true,
+      //     pauseOnHover: false,
+      //     draggable: true,
+      //     progress: undefined,
+      //     theme: 'colored',
+      //   });
+      //   setPage(1);
+      //   handleCloseModal();
+      //   fetchAllAdmins();
+      // }
+
+      console.log('payload :>> ', payload);
     } catch (error: any) {
       console.log(error);
       toast.error(error.response.data.message, {
@@ -264,9 +311,12 @@ const Officers = () => {
       setIsOpenModal(true);
     }
   };
+  const handlePressSearch = () => {
+    fetchAllAdmins();
+  };
   useEffect(() => {
     fetchAllAdmins();
-  }, [page, limit, keywords]);
+  }, [page, limit]);
   useEffect(() => {
     fetchAllAdminsIntercom();
     fetchRoles();
@@ -344,13 +394,29 @@ const Officers = () => {
                     value={keywords}
                     onChange={(e) => handleChangeKeywords(e.target.value)}
                     placeholder="Type to search admins name"
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter') {
+                        handlePressSearch();
+                      }
+                    }}
                     className="w-full bg-transparent pr-4 pl-9 focus:outline-none"
                   />
                   {keywords.trim() !== '' && (
-                    <button onClick={() => setKeywords('')}>
+                    <button
+                      onClick={() => {
+                        setKeywords(''), handlePressSearch();
+                      }}
+                    >
                       <IoMdCloseCircle size={16} color="#AEB7C0" />
                     </button>
                   )}
+                  <button
+                    onClick={handlePressSearch}
+                    disabled={keywords.trim() === ''}
+                    className=" ml-2 h-full w-[10%]  text-primary disabled:text-strokedark disabled:text-opacity-30"
+                  >
+                    Search
+                  </button>
                 </div>
               </div>
             </div>
@@ -364,8 +430,8 @@ const Officers = () => {
         ) : (
           <TableOfficers
             data={admins}
-            roles={roles}
-            countryList={countryList}
+            roles={optionsRole}
+            countryList={optionsCountry}
             onSuccess={() => fetchAllAdmins()}
           />
         )}
@@ -425,18 +491,14 @@ const Officers = () => {
               <label className="text-body text-sm capitalize" htmlFor="role">
                 role
               </label>
-              <select
-                id="role"
-                onChange={(e) => setOfficersRoles(Number(e.target.value))}
-                value={officersRoles}
-                className="border-[1px] border-body rounded-md px-4 py-2 text-sm text-black"
-              >
-                {roles.map((role, index) => (
-                  <option key={index} value={role.id}>
-                    {role.roleName === 'admin-dev' ? 'admin' : 'officers'}
-                  </option>
-                ))}
-              </select>
+              <Select
+                options={optionsRole}
+                defaultInputValue={officersRoles}
+                onChange={(e: any) => setOfficersRoles(e)}
+                isSearchable={false}
+                isClearable={false}
+                styles={styleSelection}
+              />
             </div>
             <div className="flex flex-col gap-1 w-[45%] md:w-full">
               <label
@@ -459,18 +521,14 @@ const Officers = () => {
             <label className="text-body text-sm capitalize" htmlFor="country">
               Country
             </label>
-            <select
-              id="country"
-              onChange={(e) => setCountry(e.target.value)}
-              value={country}
-              className="border-[1px] border-body rounded-md px-4 py-2 text-sm text-black"
-            >
-              {countryList.map((c, index) => (
-                <option key={index} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
+            <Select
+              options={optionsCountry}
+              defaultInputValue={country}
+              styles={styleSelection}
+              onChange={(e: any) => setCountry(e)}
+              isClearable={false}
+              isMulti
+            />
           </div>
           <div className="flex flex-col gap-1 relative">
             <label className="text-body text-sm capitalize" htmlFor="password">

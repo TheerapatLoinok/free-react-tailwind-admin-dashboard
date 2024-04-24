@@ -75,3 +75,13 @@ export const ChangeRole = (payload: { adminId: number; roleId: number }) => {
 export const DeleteOfficers = (id: number) => {
   return http.del(`/admin/delete/${id}`, true);
 };
+
+export const ChangeCountryOfficers = (payload: {
+  adminId: number;
+  country: string;
+}) => {
+  return http.post(`/admin/change-country`, payload, {
+    withAuth: true,
+    withFromData: false,
+  });
+};

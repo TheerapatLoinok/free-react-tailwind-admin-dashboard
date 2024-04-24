@@ -1,16 +1,22 @@
 import moment from 'moment';
 import { Item, RolesType } from '../pages/Officers';
 import { IoIosSettings } from 'react-icons/io';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Modal from '../common/Modal';
 import { ChangeRole, DeleteOfficers } from '../api/officers';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
+import Select from 'react-select';
+
+interface OptionsType {
+  label: string;
+  value: string;
+}
 
 interface TableOfficersProps {
   data: Item[];
-  roles: RolesType[];
-  countryList: string[];
+  roles: OptionsType[];
+  countryList: OptionsType[];
   onSuccess: () => void;
 }
 
@@ -23,14 +29,44 @@ const TableOfficers = ({
   const [isOpen, setIsOpen] = useState(false);
   const [item, setItem] = useState<Item | undefined>();
   const userRole = localStorage.getItem('role');
+  const [selectedRole, setSelectedRole] = useState<any>(null);
+  const [selectCountry, setSelectCountry] = useState<any>(null);
   const [isChange, setIsChange] = useState(false);
+  const styleSelection = {
+    option: (styles: any, { isFocused, isSelected, isDisabled }: any) => ({
+      ...styles,
+      background: isFocused ? '#fff' : isSelected ? '#FFF' : '#fff',
+      zIndex: 1,
+      fontSize: '14px',
+      fontWeight: '400',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+      color: isDisabled ? '#231F20' : isSelected ? '#3C50E0' : '#858693',
+      cursor: 'pointer',
+      '&:hover': {
+        color: '#231F20',
+      },
+    }),
 
+    control: (base: any) => ({
+      ...base,
+      '&:hover': {
+        border: '1px solid #64748B',
+        color: '#231F20',
+      },
+      height: 'auto',
+      fontSize: '14px',
+      fontWeight: '400',
+      border: '1px solid #64748B',
+      borderRadius: '8px',
+    }),
+  };
   const handleCloseModal = () => {
     setIsOpen(false);
     setItem(undefined);
     setIsChange(false);
   };
-
   const handleChangeValue = (key: string, value: string) => {
     setItem((prevItem: any) => ({
       ...prevItem,
@@ -38,22 +74,25 @@ const TableOfficers = ({
     }));
     setIsChange(true);
   };
-
   const onEdit = async () => {
     try {
       if (!item) return;
-      const payload = { adminId: item?.id, roleId: Number(item.roleName) };
-      (await ChangeRole(payload)) as { message: string };
-      toast.success('Edit officers success.', {
-        position: 'bottom-left',
-      });
-      onSuccess();
-      handleCloseModal();
+      const payload = { adminId: item?.id, roleId: item.roleName };
+      if (item.countryAssign.length <= 0) {
+        return toast.error('Country  cannot be empty', {
+          position: 'bottom-left',
+        });
+      }
+      // (await ChangeRole(payload)) as { message: string };
+      // toast.success('Edit officers success.', {
+      //   position: 'bottom-left',
+      // });
+      // onSuccess();
+      // handleCloseModal();
     } catch (error) {
       console.log(error);
     }
   };
-
   const handleDeleteOffices = () => {
     Swal.fire({
       title: 'Are you sure?',
@@ -69,7 +108,6 @@ const TableOfficers = ({
       }
     });
   };
-
   const onDelete = async () => {
     try {
       if (!item) return;
@@ -85,11 +123,21 @@ const TableOfficers = ({
       console.log(error);
     }
   };
-
   const handleOpenModal = (item: Item) => {
     setIsOpen(true);
     setItem(item);
   };
+  useEffect(() => {
+    if (isOpen && item && roles) {
+      setSelectedRole(roles.filter((role) => role.label === item.roleName)[0]);
+      setSelectCountry(
+        countryList.filter((country) => country.label === item.countryAssign),
+      );
+    } else {
+      setSelectCountry(null);
+      setSelectedRole(null);
+    }
+  }, [isOpen, item]);
 
   return (
     <div className="flex flex-col">
@@ -120,25 +168,20 @@ const TableOfficers = ({
                 <label className="text-body text-sm capitalize" htmlFor="role">
                   role
                 </label>
-                <select
-                  id="role"
-                  disabled={userRole !== 'admin-dev'}
-                  onChange={(e) =>
-                    handleChangeValue('roleName', e.target.value)
-                  }
-                  value={item?.roleName}
-                  className="border-[1px] border-body disabled:bg-stroke rounded-md px-4 py-2 text-sm text-black"
-                >
-                  {roles.map((role) => {
-                    const roleName =
-                      role.roleName === 'admin-dev' ? 'admin' : 'officers';
-                    return (
-                      <option key={role.id} value={role.roleName}>
-                        {roleName}
-                      </option>
-                    );
-                  })}
-                </select>
+                {selectedRole !== null && (
+                  <Select
+                    options={roles}
+                    defaultValue={selectedRole}
+                    onChange={(e: any) => {
+                      setSelectedRole(e);
+                      handleChangeValue('roleName', e.value);
+                    }}
+                    isSearchable={false}
+                    isDisabled={userRole !== 'admin-dev'}
+                    isClearable={false}
+                    styles={styleSelection}
+                  />
+                )}
               </div>
               <div className="flex flex-col gap-1 w-[45%] md:w-full">
                 <label
@@ -161,18 +204,19 @@ const TableOfficers = ({
               <label className="text-body text-sm capitalize" htmlFor="country">
                 Country
               </label>
-              <select
-                id="country"
-                disabled
-                value={item?.countryAssign}
-                className="border-[1px] border-body disabled:bg-stroke rounded-md px-4 py-2 text-sm text-black"
-              >
-                {countryList.map((c, index) => (
-                  <option key={index} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </select>
+              {selectCountry !== null && (
+                <Select
+                  options={countryList}
+                  defaultValue={selectCountry}
+                  onChange={(e: any) => {
+                    setSelectCountry(e);
+                    handleChangeValue('countryAssign', e);
+                  }}
+                  isDisabled={userRole !== 'admin-dev'}
+                  isMulti
+                  styles={styleSelection}
+                />
+              )}
             </div>
             <div className="flex gap-2 md:gap-4 justify-between">
               <div className="flex flex-col gap-1 w-[45%] md:w-full">

@@ -12,7 +12,7 @@ export const GetOfficers = ({
   const params = {
     page: page ?? 1,
     limit: limit ?? 10,
-    username: keywords,
+    search: keywords,
   };
   return http.get(`/admin/get-admin-paginate`, params, true);
 };

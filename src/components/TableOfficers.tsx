@@ -1,9 +1,13 @@
 import moment from 'moment';
-import { Item, RolesType } from '../pages/Officers';
+import { Item, OptionsRole } from '../pages/Officers';
 import { IoIosSettings } from 'react-icons/io';
 import { useState, useEffect } from 'react';
 import Modal from '../common/Modal';
-import { ChangeRole, DeleteOfficers } from '../api/officers';
+import {
+  ChangeCountryOfficers,
+  ChangeRole,
+  DeleteOfficers,
+} from '../api/officers';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 import Select from 'react-select';
@@ -15,7 +19,7 @@ interface OptionsType {
 
 interface TableOfficersProps {
   data: Item[];
-  roles: OptionsType[];
+  roles: OptionsRole[];
   countryList: OptionsType[];
   onSuccess: () => void;
 }
@@ -77,22 +81,37 @@ const TableOfficers = ({
   const onEdit = async () => {
     try {
       if (!item) return;
-      const payload = { adminId: item?.id, roleId: item.roleName };
+      const payloadChangeRole = {
+        adminId: item?.id,
+        roleId: roles.filter((r) => r.label === item.roleName)[0].value,
+      };
+
       if (item.countryAssign.length <= 0) {
         return toast.error('Country  cannot be empty', {
           position: 'bottom-left',
         });
       }
-      // (await ChangeRole(payload)) as { message: string };
-      // toast.success('Edit officers success.', {
-      //   position: 'bottom-left',
-      // });
-      // onSuccess();
-      // handleCloseModal();
+      const payloadChangeCountry = {
+        adminId: item?.id,
+        country: selectCountry.map((c: any) => {
+          return c.value;
+        }),
+      };
+
+      (await ChangeRole(payloadChangeRole)) as { message: string };
+      (await ChangeCountryOfficers(payloadChangeCountry)) as {
+        message: string;
+      };
+      toast.success('Edit officers success.', {
+        position: 'bottom-left',
+      });
+      onSuccess();
+      handleCloseModal();
     } catch (error) {
       console.log(error);
     }
   };
+
   const handleDeleteOffices = () => {
     Swal.fire({
       title: 'Are you sure?',
@@ -131,13 +150,15 @@ const TableOfficers = ({
     if (isOpen && item && roles) {
       setSelectedRole(roles.filter((role) => role.label === item.roleName)[0]);
       setSelectCountry(
-        countryList.filter((country) => country.label === item.countryAssign),
+        item.countryAssign.map((country: string) => {
+          return countryList.filter((c) => c.value === country)[0];
+        }),
       );
     } else {
       setSelectCountry(null);
       setSelectedRole(null);
     }
-  }, [isOpen, item]);
+  }, [isOpen]);
 
   return (
     <div className="flex flex-col">
@@ -174,7 +195,7 @@ const TableOfficers = ({
                     defaultValue={selectedRole}
                     onChange={(e: any) => {
                       setSelectedRole(e);
-                      handleChangeValue('roleName', e.value);
+                      handleChangeValue('roleName', e.label);
                     }}
                     isSearchable={false}
                     isDisabled={userRole !== 'admin-dev'}
@@ -357,8 +378,10 @@ const TableOfficers = ({
               </div>
 
               <div className="flex items-center justify-center p-2.5 xl:p-5">
-                <p className="text-black capitalize dark:text-white sm:block">
-                  {item.countryAssign ?? 'Thailand'}
+                <p className="text-black items-center capitalize dark:text-white sm:block ">
+                  {item.countryAssign.map((c) => {
+                    return `${c} `;
+                  }) ?? 'Thailand'}
                 </p>
               </div>
 

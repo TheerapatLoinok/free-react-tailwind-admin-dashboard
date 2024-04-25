@@ -78,7 +78,7 @@ export const DeleteOfficers = (id: number) => {
 
 export const ChangeCountryOfficers = (payload: {
   adminId: number;
-  country: string;
+  country: string[];
 }) => {
   return http.post(`/admin/change-country`, payload, {
     withAuth: true,

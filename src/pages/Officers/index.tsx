@@ -30,7 +30,7 @@ export interface Item {
   created_at: string;
   updated_at: string;
   intercomAdminId: string;
-  countryAssign: string;
+  countryAssign: string[];
   active: boolean;
 }
 interface Meta {
@@ -78,9 +78,13 @@ export interface RolesType {
   updated_at: string;
   deleted_at: any;
 }
-interface OptionsType {
+export interface OptionsType {
   label: string;
   value: string;
+}
+export interface OptionsRole {
+  label: string;
+  value: number;
 }
 
 const Officers = () => {
@@ -100,7 +104,6 @@ const Officers = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
-  const [roles, setRoles] = useState<RolesType[]>([]);
   const [officersRoles, setOfficersRoles] = useState<any>(null);
   const [country, setCountry] = useState<any>(null);
   const [userEmail, setUserEmail] = useState('');
@@ -109,8 +112,7 @@ const Officers = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const role = localStorage.getItem('role');
   const [isDisableButton, setIsDisableButton] = useState(true);
-  const [countryList, setCountryList] = useState<string[]>([]);
-  const [optionsRole, setOptionsRole] = useState<OptionsType[]>([]);
+  const [optionsRole, setOptionsRole] = useState<OptionsRole[]>([]);
   const [optionsCountry, setOptionsCountry] = useState<OptionsType[]>([]);
   const styleSelection = {
     option: (styles: any, { isFocused, isSelected, isDisabled }: any) => ({
@@ -146,7 +148,11 @@ const Officers = () => {
   const handleChangeKeywords = (text: string) => {
     setKeywords(text);
   };
-  const fetchAllAdmins = async () => {
+  const fetchAllAdmins = async (
+    page: number,
+    limit: number,
+    keywords: string,
+  ) => {
     try {
       setIsLoading(true);
       const data = (await GetOfficers({
@@ -210,15 +216,21 @@ const Officers = () => {
     setIsShowConfirmPassword(false);
     setIsShowPassword(false);
   };
+  const handleClearValue = () => {
+    setKeywords('');
+    fetchAllAdmins(page, limit, '');
+  };
   const fetchRoles = async () => {
     try {
       const data = (await GetAllRoles()) as RolesType[];
       if (data) {
         const prepareData = data.map((role) => {
-          return { label: role.roleName, value: role.roleName };
+          return {
+            label: role.roleName,
+            value: role.id,
+          };
         });
         setOptionsRole(prepareData);
-        setRoles(data);
       }
     } catch (error) {
       console.log(error);
@@ -229,7 +241,6 @@ const Officers = () => {
       const data = (await GetCountry()) as {
         contryProvide: string[];
       };
-      setCountryList(data?.contryProvide);
       setOptionsCountry(
         data?.contryProvide.map((country: string) => {
           return { label: country, value: country };
@@ -272,26 +283,26 @@ const Officers = () => {
         password: password,
         intercomAdminId: intercomId,
         roleAdminId: officersRoles?.value,
-        countryAssign: country,
+        countryAssign: country.map((c: any) => {
+          return c.value;
+        }),
       };
-      // const data = (await CreateOfficers(payload)) as any;
-      // if (data) {
-      //   toast.success(data.message, {
-      //     position: 'bottom-left',
-      //     autoClose: 3000,
-      //     hideProgressBar: true,
-      //     closeOnClick: true,
-      //     pauseOnHover: false,
-      //     draggable: true,
-      //     progress: undefined,
-      //     theme: 'colored',
-      //   });
-      //   setPage(1);
-      //   handleCloseModal();
-      //   fetchAllAdmins();
-      // }
-
-      console.log('payload :>> ', payload);
+      const data = (await CreateOfficers(payload)) as any;
+      if (data) {
+        toast.success(data.message, {
+          position: 'bottom-left',
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: 'colored',
+        });
+        setPage(1);
+        handleCloseModal();
+        fetchAllAdmins(page, limit, keywords);
+      }
     } catch (error: any) {
       console.log(error);
       toast.error(error.response.data.message, {
@@ -312,10 +323,10 @@ const Officers = () => {
     }
   };
   const handlePressSearch = () => {
-    fetchAllAdmins();
+    fetchAllAdmins(page, limit, keywords);
   };
   useEffect(() => {
-    fetchAllAdmins();
+    fetchAllAdmins(page, limit, keywords);
   }, [page, limit]);
   useEffect(() => {
     fetchAllAdminsIntercom();
@@ -402,11 +413,7 @@ const Officers = () => {
                     className="w-full bg-transparent pr-4 pl-9 focus:outline-none"
                   />
                   {keywords.trim() !== '' && (
-                    <button
-                      onClick={() => {
-                        setKeywords(''), handlePressSearch();
-                      }}
-                    >
+                    <button onClick={handleClearValue}>
                       <IoMdCloseCircle size={16} color="#AEB7C0" />
                     </button>
                   )}
@@ -432,7 +439,7 @@ const Officers = () => {
             data={admins}
             roles={optionsRole}
             countryList={optionsCountry}
-            onSuccess={() => fetchAllAdmins()}
+            onSuccess={() => fetchAllAdmins(page, limit, keywords)}
           />
         )}
         {admins.length > 0 && (

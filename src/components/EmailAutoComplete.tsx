@@ -69,7 +69,7 @@ const EmailAutoComplete = ({
               {options.map((items, index) => (
                 <button
                   onClick={() => handleSelectEmail(items.email)}
-                  disabled={searchKeyword === items.email}
+                  // disabled={searchKeyword === items.email}
                   key={index}
                   className="text-sm px-4 py-2 disabled:text-bodydark hover:bg-primary hover:bg-opacity-30 text-black text-start"
                 >

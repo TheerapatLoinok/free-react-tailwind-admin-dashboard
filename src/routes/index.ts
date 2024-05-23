@@ -8,14 +8,14 @@ const ChatAI = lazy(() => import('../pages/ChatAI'))
 const History = lazy(() => import('../pages/History'));
 const Officers = lazy(() => import('../pages/Officers'))
 const Logs = lazy(() => import('../pages/Officers/Logs'));
-const Dashboard = lazy(() => import('../pages/DashBoard'))
+const DashBoard = lazy(() => import('../pages/Dashboard'))
 const PreviewDataEmbed = lazy(() => import('../pages/PreviewData'))
 
 const coreRoutes = [
   {
     path:'/admin/dashboard',
     title:"Dashboard",
-    component:Dashboard
+    component:DashBoard
   },
  
   {

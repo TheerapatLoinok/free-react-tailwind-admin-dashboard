@@ -6,7 +6,7 @@ import routes from './routes';
 import { ToastContainer } from 'react-toastify';
 import PageNotFound from './components/Errors/PageNotFound';
 import { GetProfile } from './api/auth';
-import Dashboard from './pages/DashBoard';
+import DashBoard from './pages/Dashboard';
 
 const DefaultLayout = lazy(() => import('./layout/DefaultLayout'));
 
@@ -51,7 +51,7 @@ function App() {
       ) : (
         <Routes>
           <Route element={<DefaultLayout />}>
-            <Route path="/admin" element={<Dashboard />} />
+            <Route path="/admin" element={<DashBoard />} />
             {routes.map((routes, index) => {
               const { path, component: Component } = routes;
               return (

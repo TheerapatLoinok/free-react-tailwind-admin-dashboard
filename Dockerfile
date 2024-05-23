@@ -3,6 +3,7 @@ FROM node:20-alpine
 WORKDIR /srv/app
 
 COPY package.json .
+# COPY vite.config.js ./
 
 # RUN npm install -g npm@latest
 

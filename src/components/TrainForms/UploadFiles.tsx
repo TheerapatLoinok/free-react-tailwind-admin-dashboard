@@ -65,12 +65,13 @@ const UploadFiles = () => {
       console.log(error);
     }
   };
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+  const onSubmit: SubmitHandler<Inputs> = async (data: any) => {
     try {
+      setIsLoading(true);
       const payload = {
-        file: data.files,
-        chunk: data.chunkLength,
-        overlap: data.chunkOverlap,
+        file: data?.files[0],
+        chunk: data?.chunkLength,
+        overlap: data?.chunkOverlap,
       };
       const responses = await convertFiletoVector(payload);
       if (responses) {
@@ -84,7 +85,6 @@ const UploadFiles = () => {
           progress: undefined,
           theme: 'colored',
         });
-        setIsLoading(false);
       }
     } catch (error: any) {
       console.log(error);

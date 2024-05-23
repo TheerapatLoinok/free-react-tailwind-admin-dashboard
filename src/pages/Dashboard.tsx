@@ -11,7 +11,7 @@ export interface StatisticType {
   total: number;
 }
 
-const Dashboard = () => {
+const DashBoard = () => {
   const [statistics, setStatistics] = useState<StatisticType>();
   const getStatistics = async () => {
     try {
@@ -69,4 +69,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default DashBoard;

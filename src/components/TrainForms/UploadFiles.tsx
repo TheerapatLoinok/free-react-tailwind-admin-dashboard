@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import Tooltip from '../../common/ ToolTip';
 import { IoHelpCircleSharp } from 'react-icons/io5';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 
 type Inputs = {
   files: File;
@@ -113,9 +114,16 @@ const UploadFiles = () => {
         pageName="Train data"
       />
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6  shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-        <h3 className="text-xl mb-4 font-semibold text-black">
-          Upload dataset for train ai
-        </h3>
+        <div className="flex justify-between">
+          <h3 className="text-xl mb-4 font-semibold text-black">
+            Upload dataset for train ai
+          </h3>
+          <Link to="/admin/settings/preview-data">
+            <button className="px-4 py-2 border-[1px] rounded-md border-primary text-primary hover:bg-primary hover:text-white ">
+              Preview data
+            </button>
+          </Link>
+        </div>
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-4 mb-2"

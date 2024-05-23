@@ -79,3 +79,11 @@ export const getSettingsModel = () => {
 export const checkConvertFileStatus = () => {
   return http.get('/status-queue-make-embedding', {}, true);
 };
+
+export const getEmbed = () => {
+  return http.get('/embedding', {}, true);
+};
+
+export const updateEmbed = (id: number, payload: { content: string }) => {
+  return http.patch(`/embedding/${id}`, payload, true);
+};

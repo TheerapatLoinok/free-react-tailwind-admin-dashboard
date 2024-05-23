@@ -6,7 +6,7 @@ import routes from './routes';
 import { ToastContainer } from 'react-toastify';
 import PageNotFound from './components/Errors/PageNotFound';
 import { GetProfile } from './api/auth';
-import Dashboard from './pages/Dashboard';
+import Dashboard from './pages/DashBoard';
 
 const DefaultLayout = lazy(() => import('./layout/DefaultLayout'));
 

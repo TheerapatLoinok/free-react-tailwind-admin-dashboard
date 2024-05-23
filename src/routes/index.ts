@@ -8,7 +8,8 @@ const ChatAI = lazy(() => import('../pages/ChatAI'))
 const History = lazy(() => import('../pages/History'));
 const Officers = lazy(() => import('../pages/Officers'))
 const Logs = lazy(() => import('../pages/Officers/Logs'));
-const Dashboard = lazy(() => import('../pages/Dashboard'))
+const Dashboard = lazy(() => import('../pages/DashBoard'))
+const PreviewDataEmbed = lazy(() => import('../pages/PreviewData'))
 
 const coreRoutes = [
   {
@@ -36,6 +37,11 @@ const coreRoutes = [
     path: '/admin/settings/uploadfiles',
     title: 'Upload files',
     component: UploadFiles,
+  }, 
+  {
+    path: '/admin/settings/preview-data',
+    title: 'Preview Data',
+    component: PreviewDataEmbed,
   },
   {
     path: '/admin/settings/chunks',
